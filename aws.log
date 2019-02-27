@@ -131,6 +131,39 @@ VOCtest_06-Nov-2007.tar                            100%[========================
 experiments  faster_rcnn  free_loc  _init_paths.py  __init__.py  LICENSE  README.md  test.py  train.py
 (pytorch_p27) ubuntu@ip-172-31-95-159:~/hw2-release$ cd data/
 (pytorch_p27) ubuntu@ip-172-31-95-159:~/hw2-release/data$ ln -s /data/VOCdevkit VOCdevkit2007 
+(pytorch_p27) ubuntu@ip-172-31-95-159:~/hw2-release/data/VOCdevkit2007$ cd /data/
+(pytorch_p27) ubuntu@ip-172-31-95-159:/data$ ls
+lost+found  VOCdevkit  VOCtest_06-Nov-2007.tar  VOCtrainval_06-Nov-2007.tar
+(pytorch_p27) ubuntu@ip-172-31-95-159:/data$ wget wget http://www.cs.cmu.edu/~spurushw/hw2_files/selective_search_data.tar && tar xf selective_search_data.tar 
+--2019-02-27 00:32:50--  http://wget/
+Resolving wget (wget)... failed: Name or service not known.
+wget: unable to resolve host address ‘wget’
+--2019-02-27 00:32:50--  http://www.cs.cmu.edu/~spurushw/hw2_files/selective_search_data.tar
+Resolving www.cs.cmu.edu (www.cs.cmu.edu)... 128.2.42.95
+Connecting to www.cs.cmu.edu (www.cs.cmu.edu)|128.2.42.95|:80... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: 274647040 (262M) [application/x-tar]
+Saving to: ‘selective_search_data.tar’
+
+selective_search_data.tar                          100%[================================================================================================================>] 261.92M  1.43MB/s    in 2m 30s  
+
+2019-02-27 00:35:19 (1.75 MB/s) - ‘selective_search_data.tar’ saved [274647040/274647040]
+
+FINISHED --2019-02-27 00:35:19--
+Total wall clock time: 2m 30s
+Downloaded: 1 files, 262M in 2m 30s (1.75 MB/s)
+(pytorch_p27) ubuntu@ip-172-31-95-159:/data$ ls
+lost+found  selective_search_data.tar  VOCdevkit  VOCtest_06-Nov-2007.tar  VOCtrainval_06-Nov-2007.tar
+(pytorch_p27) ubuntu@ip-172-31-95-159:/data$ tar xf selective_search_data.tar
+(pytorch_p27) ubuntu@ip-172-31-95-159:/data$ ls
+lost+found  selective_search_data  selective_search_data.tar  VOCdevkit  VOCtest_06-Nov-2007.tar  VOCtrainval_06-Nov-2007.tar
+(pytorch_p27) ubuntu@ip-172-31-95-159:/data$ cd 
+(pytorch_p27) ubuntu@ip-172-31-95-159:~$ cd hw2-release/
+(pytorch_p27) ubuntu@ip-172-31-95-159:~/hw2-release$ cd data/
+(pytorch_p27) ubuntu@ip-172-31-95-159:~/hw2-release/data$ ln -s /data/selective_search_data 
+(pytorch_p27) ubuntu@ip-172-31-95-159:~/hw2-release/data$ ls
+selective_search_data  VOCdevkit2007
+(pytorch_p27) ubuntu@ip-172-31-95-159:~/hw2-release/data$ 
 (pytorch_p27) ubuntu@ip-172-31-95-159:~/hw2-release/data$ 
 (pytorch_p27) ubuntu@ip-172-31-95-159:~/hw2-release/data$ cd ../
 (pytorch_p27) ubuntu@ip-172-31-95-159:~/hw2-release$ cd faster_rcnn/
