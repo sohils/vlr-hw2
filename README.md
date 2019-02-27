@@ -77,6 +77,7 @@ $ wget http://host.robots.ox.ac.uk/pascal/VOC/voc2007/VOCtest_06-Nov-2007.tar &&
 $ cd VOCdevkit/VOC2007/
 $ export DATA_DIR=$(pwd)
 ```
+
 3. In the main folder of the code provided in this repository, there is an empty directory with the name `data`. 
 	- In this folder, you need to create a link to `VOCdevkit` in this folder. 
 	- If you read WSDDN paper [2], you should know that it requires bounding box proposals from Selective Search, Edge Boxes or a similar method. We provide you with this data for the assignment. You need to put these proposals in the data folder too.
