@@ -103,7 +103,10 @@ $ conda install opencv
 $ pip install easydict
 $ ./make.sh
 ```
-(If the above step produces error, report it on piazza). 
+
+Here is a log of the process to set up the environment on AWS [Log](https://bitbucket.org/cmu16824spring19/hw2-release/src/master/aws.log).
+If the above step produces error, go back and check this log to make sure you have followed everything.
+If you are using a personal machine, the errors could be related to the CUDA installation and we won't be able to help you there.
 
 Now that we have the code and the data, we can try to understand the main data structures. The data is organized in an object which is an instance of the class `imdb`. You can find the definition of this class in `faster_rcnn/datasets/imdb.py`. For each dataset, we usually create a subclass of `imdb` with specific methods which might differ across datasets. For this assignment, we will use the `pascal_voc` subclass defined in `faster_rcnn/datasets/pascal_voc.py`. 
 
