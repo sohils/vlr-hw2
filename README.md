@@ -252,7 +252,7 @@ In ``test.py``,
 Include all the code, downloaded images from visdom, tensorboard files and screenshots of tensorboard after training.
 Also download images from tensorboard for the last step and add them to the report. Report the final class-wise AP on the test set and the mAP.
 
-Hint: My code reports 18mAP at 30k iterations. If you achieve anything >9mAP, you don't have to worry about improving the performance. 
+**Hint**: My code reports 18mAP at 30k iterations. If you achieve anything >9mAP, you don't have to worry about improving the performance. 
 
 Regularly check the piazza handout post for additional hints and changes.
 
