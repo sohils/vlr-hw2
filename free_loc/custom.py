@@ -1,5 +1,6 @@
 import torch.utils.data as data
 import torch.nn as nn
+import torch.nn.functional as F
 import torch.utils.model_zoo as model_zoo
 model_urls = {
         'alexnet': 'https://download.pytorch.org/models/alexnet-owt-4df8aa71.pth',
@@ -30,21 +31,22 @@ def find_classes(imdb):
     #TODO: classes: list of classes
     #TODO: class_to_idx: dictionary with keys=classes and values=class index
     #If you did Task 0, you should know how to set these values from the imdb
-
-
-
-
-
+    classes = imdb.classes
+    class_to_idx = imdb._class_to_ind
     return classes, class_to_idx
 
 
 def make_dataset(imdb, class_to_idx):
     #TODO: return list of (image path, list(+ve class indices)) tuples
     #You will be using this in IMDBDataset
-
-
-
-
+    dataset_list = []
+    im_indcies = imdb._load_image_set_index()
+    for img_num, img_index in enumerate(im_indcies):
+        img_path = imdb.image_path_at(img_num)
+        class_indices = np.zeros(imdb.num_classes)
+        class_indices[imdb._load_pascal_annotation(img_index)['gt_classes']]=1
+        img_class_indices = class_indices.tolist()
+        dataset_list.append((img_path,img_class_indices))
     return dataset_list
 
 
@@ -77,34 +79,33 @@ class LocalizerAlexNet(nn.Module):
     def __init__(self, num_classes=20):
         super(LocalizerAlexNet, self).__init__()
         #TODO: Define model
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+        # Features
+        self.conv1 = nn.Conv2d(in_channels=3,out_channels=64,kernel_size=11,stride=4,padding=2)
+        self.maxpool = nn.MaxPool2d(kernel_size=3,stride=2,dilation=1)
+        self.conv2 = nn.Conv2d(in_channels=64,out_channels=192,kernel_size=5,stride=1,padding=1)
+        self.conv3 = nn.Conv2d(in_channels=192,out_channels=384,kernel_size=3,stride=1,padding=1)
+        self.conv4 = nn.Conv2d(in_channels=384,out_channels=256,kernel_size=3,stride=1,padding=1)
+        self.conv5 = nn.Conv2d(in_channels=256,out_channels=256,kernel_size=3,stride=1,padding=1)
+        # Classification
+        self.conv6 = nn.Conv2d(in_channels=256,out_channels=256,kernel_size=3,stride=1)
+        self.conv7 = nn.Conv2d(in_channels=256,out_channels=256,kernel_size=1,stride=1)
+        self.conv8 = nn.Conv2d(in_channels=256,out_channels=20,kernel_size=1,stride=1)
 
     def forward(self, x):
         #TODO: Define forward pass
+        out = F.relu(self.conv1(x))
+        out = self.maxpool(out)
 
+        out = F.relu(self.conv2(x))
+        out = self.maxpool(out)
 
-
-
-
-
-
-        return x
+        out = F.relu(self.conv3(x))
+        out = F.relu(self.conv4(x))
+        out = F.relu(self.conv5(x))
+        out = F.relu(self.conv6(x))
+        out = F.relu(self.conv7(x))
+        out = self.conv8(x)
+        return out
 
 
 
@@ -148,14 +149,22 @@ def localizer_alexnet(pretrained=False, **kwargs):
     model = LocalizerAlexNet(**kwargs)
     #TODO: Initialize weights correctly based on whethet it is pretrained or
     # not
+    if(pretrained):
+        state_dict = torch.utils.model_zoo.load_url(model_urls['alex_net'])
+        model.conv1.weights.items = state_dict['features.0.weight']
+        model.conv1.bias.items = state_dict['features.0.bias']
 
+        model.conv2.weights.items = state_dict['features.3.weight']
+        model.conv2.bias.items = state_dict['features.3.bias']
 
+        model.conv3.weights.items = state_dict['features.6.weight']
+        model.conv3.bias.items = state_dict['features.6.bias']
 
+        model.conv4.weights.items = state_dict['features.8.weight']
+        model.conv4.bias.items = state_dict['features.8.bias']
 
-
-
-
-
+        model.conv5.weights.items = state_dict['features.10.weight']
+        model.conv5.bias.items = state_dict['features.10.bias']
 
     return model
 
@@ -226,18 +235,8 @@ class IMDBDataset(data.Dataset):
                                    (it can be a numpy array)
         """
         # TODO: Write this function, look at the imagenet code for inspiration
-
-
-
-
-
-
-
-
-
-
-
-
+        image_name, taget = self.imgs[index]
+        img = Image.open(image_name)
 
         return img, target
 
