@@ -136,14 +136,11 @@ def main():
 
     # TODO:
     # define loss function (criterion) and optimizer
+    criterion = nn.SoftMarginLoss(reduction='none').cuda(args.gpu)
 
-
-
-
-
-
-
-
+    optimizer = torch.optim.SGD(model.parameters(), args.lr,
+                                momentum=args.momentum,
+                                weight_decay=args.weight_decay)
 
     # optionally resume from a checkpoint
     if args.resume:
@@ -239,7 +236,7 @@ def main():
 
 
 #TODO: You can add input arguments if you wish
-def train(train_loader, model, criterion, optimizer, epoch):
+def train(train_loader, model, criterion, optimizer, epoch, args):
     batch_time = AverageMeter()
     data_time = AverageMeter()
     losses = AverageMeter()
@@ -261,10 +258,9 @@ def train(train_loader, model, criterion, optimizer, epoch):
         # TODO: Get output from model
         # TODO: Perform any necessary functions on the output
         # TODO: Compute loss using ``criterion``
-
-
-
-
+        output = model(input)
+        output = F.max_pool2d(output, kernel_size=output.size()[2:])
+        loss = criterion(output, target)
 
         # measure metrics and record loss
         m1 = metric1(imoutput.data, target)
@@ -275,11 +271,9 @@ def train(train_loader, model, criterion, optimizer, epoch):
 
         # TODO:
         # compute gradient and do SGD step
-
-
-
-
-
+        optimizer.zero_grad()
+        loss.backward()
+        optimizer.step()
 
         # measure elapsed time
         batch_time.update(time.time() - end)
@@ -334,12 +328,9 @@ def validate(val_loader, model, criterion):
         # TODO: Get output from model
         # TODO: Perform any necessary functions on the output
         # TODO: Compute loss using ``criterion``
-
-
-
-
-
-
+        output = model(input)
+        output = F.max_pool2d(output, kernel_size=output.size()[2:])
+        loss = criterion(output, target)
 
 
         # measure metrics and record loss
