@@ -2,6 +2,7 @@ import torch.utils.data as data
 import torch.nn as nn
 import torch.nn.functional as F
 import torch.utils.model_zoo as model_zoo
+import torchvision.transforms as transforms
 model_urls = {
         'alexnet': 'https://download.pytorch.org/models/alexnet-owt-4df8aa71.pth',
 }
@@ -262,7 +263,8 @@ class IMDBDataset(data.Dataset):
         """
         # TODO: Write this function, look at the imagenet code for inspiration
         image_name, target = self.imgs[index]
-        img = Image.open(image_name)
+        img = default_loader(image_name)
+        # img = (Image.open(image_name), dtype=np.float32)
         # target = np.zeros(len(self.classes))
         # target[self.imdb._load_pascal_annotation(self.imdb.image_index[index])['gt_classes']-1]=1
         # target[imdb._load_pascal_annotation(imdb.image_index[index])['gt_classes']-1]=1
