@@ -20,6 +20,8 @@ import torchvision.transforms as transforms
 import torchvision.datasets as datasets
 import torchvision.models as models
 
+from tensorboardX import SummaryWriter
+
 from datasets.factory import get_imdb
 from custom import *
 
@@ -199,6 +201,8 @@ def main():
         validate(val_loader, model, criterion)
         return
 
+    writer = SummaryWriter()
+
     # TODO: Create loggers for visdom and tboard
     # TODO: You can pass the logger objects to train(), make appropriate
     # modifications to train()
@@ -259,8 +263,8 @@ def train(train_loader, model, criterion, optimizer, epoch, args):
         # TODO: Perform any necessary functions on the output
         # TODO: Compute loss using ``criterion``
         output = model(input)
-        output = F.max_pool2d(output, kernel_size=output.size()[2:])
-        loss = criterion(output, target)
+        imoutput = F.max_pool2d(output, kernel_size=output.size()[2:])
+        loss = criterion(imoutput, target)
 
         # measure metrics and record loss
         m1 = metric1(imoutput.data, target)
@@ -294,10 +298,18 @@ def train(train_loader, model, criterion, optimizer, epoch, args):
                       loss=losses,
                       avg_m1=avg_m1,
                       avg_m2=avg_m2))
-
+        
         #TODO: Visualize things as mentioned in handout
         #TODO: Visualize at appropriate intervals
+        n_iter = epoch*len(train_loader) + i
 
+        # Plot the Training Loss
+        writer.add_scalar('train/loss', losses.val, n_iter)
+
+        # Plot images and heat maps of GT classes for 4 batches (2 images in each batch)
+        if( i % 4 == 0 and i>0 and i<20):
+            writer.add_image('Image', input, n_iter)
+        # Same in Visdom with Title: <epoch>_<iteration>_<batch_index>_image, <epoch>_<iteration>_<batch_index>_heatmap_<class_name>
 
 
 
