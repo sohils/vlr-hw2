@@ -79,33 +79,59 @@ class LocalizerAlexNet(nn.Module):
     def __init__(self, num_classes=20):
         super(LocalizerAlexNet, self).__init__()
         #TODO: Define model
-        # Features
-        self.conv1 = nn.Conv2d(in_channels=3,out_channels=64,kernel_size=11,stride=4,padding=2)
-        self.maxpool = nn.MaxPool2d(kernel_size=3,stride=2,dilation=1)
-        self.conv2 = nn.Conv2d(in_channels=64,out_channels=192,kernel_size=5,stride=1,padding=1)
-        self.conv3 = nn.Conv2d(in_channels=192,out_channels=384,kernel_size=3,stride=1,padding=1)
-        self.conv4 = nn.Conv2d(in_channels=384,out_channels=256,kernel_size=3,stride=1,padding=1)
-        self.conv5 = nn.Conv2d(in_channels=256,out_channels=256,kernel_size=3,stride=1,padding=1)
-        # Classification
-        self.conv6 = nn.Conv2d(in_channels=256,out_channels=256,kernel_size=3,stride=1)
-        self.conv7 = nn.Conv2d(in_channels=256,out_channels=256,kernel_size=1,stride=1)
-        self.conv8 = nn.Conv2d(in_channels=256,out_channels=20,kernel_size=1,stride=1)
+        self.features = nn.Sequential(
+            nn.Conv2d(3, 64, kernel_size=11, stride=4, padding=2),
+            nn.ReLU(inplace=True),
+            nn.MaxPool2d(kernel_size=3, stride=2, dilation=1, ceil_mode=False),
+            nn.Conv2d(64, 192, kernel_size=5, stride=1, padding=1),
+            nn.ReLU(inplace=True),
+            nn.MaxPool2d(kernel_size=3, stride=2, dilation=1, ceil_mode=False),
+            nn.Conv2d(192, 384, kernel_size=3, stride=1, padding=1),
+            nn.ReLU(inplace=True),
+            nn.Conv2d(384, 256, kernel_size=3, stride=1, padding=1),
+            nn.ReLU(inplace=True),
+            nn.Conv2d(256, 256, kernel_size=3, stride=1, padding=1),
+            nn.ReLU(inplace=True)
+            # nn.MaxPool2d(kernel_size=3, stride=2, dilation=1),
+        )
+        self.classifier = nn.Sequential(
+            nn.Conv2d(256, 256, kernel_size=3, stride=1, padding=1),
+            nn.ReLU(inplace=True),
+            nn.Conv2d(256, 256, kernel_size=3, stride=1, padding=1),
+            nn.ReLU(inplace=True),
+            nn.Conv2d(256, 20, kernel_size=3, stride=1, padding=1)
+        )
+        # # Features
+        # self.conv1 = nn.Conv2d(in_channels=3,out_channels=64,kernel_size=11,stride=4,padding=2)
+        # self.maxpool = nn.MaxPool2d(kernel_size=3,stride=2,dilation=1)
+        # self.conv2 = nn.Conv2d(in_channels=64,out_channels=192,kernel_size=5,stride=1,padding=1)
+        # self.conv3 = nn.Conv2d(in_channels=192,out_channels=384,kernel_size=3,stride=1,padding=1)
+        # self.conv4 = nn.Conv2d(in_channels=384,out_channels=256,kernel_size=3,stride=1,padding=1)
+        # self.conv5 = nn.Conv2d(in_channels=256,out_channels=256,kernel_size=3,stride=1,padding=1)
+        # # Classification
+        # self.conv6 = nn.Conv2d(in_channels=256,out_channels=256,kernel_size=3,stride=1)
+        # self.conv7 = nn.Conv2d(in_channels=256,out_channels=256,kernel_size=1,stride=1)
+        # self.conv8 = nn.Conv2d(in_channels=256,out_channels=20,kernel_size=1,stride=1)
 
     def forward(self, x):
         #TODO: Define forward pass
-        out = F.relu(self.conv1(x))
-        out = self.maxpool(out)
+        x = self.features(x)
+        x = self.classifier(x)
+        return x
+        
+        # out = F.relu(self.conv1(x))
+        # out = self.maxpool(out)
 
-        out = F.relu(self.conv2(x))
-        out = self.maxpool(out)
+        # out = F.relu(self.conv2(x))
+        # out = self.maxpool(out)
 
-        out = F.relu(self.conv3(x))
-        out = F.relu(self.conv4(x))
-        out = F.relu(self.conv5(x))
-        out = F.relu(self.conv6(x))
-        out = F.relu(self.conv7(x))
-        out = self.conv8(x)
-        return out
+        # out = F.relu(self.conv3(x))
+        # out = F.relu(self.conv4(x))
+        # out = F.relu(self.conv5(x))
+        # out = F.relu(self.conv6(x))
+        # out = F.relu(self.conv7(x))
+        # out = self.conv8(x)
+        # return out
 
 
 
