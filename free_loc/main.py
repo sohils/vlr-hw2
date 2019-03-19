@@ -138,7 +138,7 @@ def main():
 
     # TODO:
     # define loss function (criterion) and optimizer
-    criterion = nn.SoftMarginLoss(reduction='none').cuda(args.gpu)
+    criterion = nn.SoftMarginLoss(reduction='none')
 
     optimizer = torch.optim.SGD(model.parameters(), args.lr,
                                 momentum=args.momentum,
