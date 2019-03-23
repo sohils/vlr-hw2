@@ -269,7 +269,7 @@ class IMDBDataset(data.Dataset):
         # TODO: Write this function, look at the imagenet code for inspiration
         image_name, target = self.imgs[index]
         img = self.loader(image_name)
-        img = self.transform(image).float()
+        img = self.transform(img).float()
         # img = (Image.open(image_name), dtype=np.float32)
         # target = np.zeros(len(self.classes))
         # target[self.imdb._load_pascal_annotation(self.imdb.image_index[index])['gt_classes']-1]=1
