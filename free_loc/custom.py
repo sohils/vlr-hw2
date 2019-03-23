@@ -79,6 +79,19 @@ def default_loader(path):
 class LocalizerAlexNet(nn.Module):
     def __init__(self, num_classes=20):
         super(LocalizerAlexNet, self).__init__()
+
+        # # Features
+        # self.conv1 = nn.Conv2d(in_channels=3,out_channels=64,kernel_size=11,stride=4,padding=2)
+        # self.maxpool = nn.MaxPool2d(kernel_size=3,stride=2,dilation=1)
+        # self.conv2 = nn.Conv2d(in_channels=64,out_channels=192,kernel_size=5,stride=1,padding=1)
+        # self.conv3 = nn.Conv2d(in_channels=192,out_channels=384,kernel_size=3,stride=1,padding=1)
+        # self.conv4 = nn.Conv2d(in_channels=384,out_channels=256,kernel_size=3,stride=1,padding=1)
+        # self.conv5 = nn.Conv2d(in_channels=256,out_channels=256,kernel_size=3,stride=1,padding=1)
+        # # Classification
+        # self.conv6 = nn.Conv2d(in_channels=256,out_channels=256,kernel_size=3,stride=1)
+        # self.conv7 = nn.Conv2d(in_channels=256,out_channels=256,kernel_size=1,stride=1)
+        # self.conv8 = nn.Conv2d(in_channels=256,out_channels=20,kernel_size=1,stride=1)
+
         #TODO: Define model
         self.features = nn.Sequential(
             nn.Conv2d(3, 64, kernel_size=11, stride=4, padding=2),
@@ -102,17 +115,7 @@ class LocalizerAlexNet(nn.Module):
             nn.ReLU(inplace=True),
             nn.Conv2d(256, 20, kernel_size=3, stride=1, padding=1)
         )
-        # # Features
-        # self.conv1 = nn.Conv2d(in_channels=3,out_channels=64,kernel_size=11,stride=4,padding=2)
-        # self.maxpool = nn.MaxPool2d(kernel_size=3,stride=2,dilation=1)
-        # self.conv2 = nn.Conv2d(in_channels=64,out_channels=192,kernel_size=5,stride=1,padding=1)
-        # self.conv3 = nn.Conv2d(in_channels=192,out_channels=384,kernel_size=3,stride=1,padding=1)
-        # self.conv4 = nn.Conv2d(in_channels=384,out_channels=256,kernel_size=3,stride=1,padding=1)
-        # self.conv5 = nn.Conv2d(in_channels=256,out_channels=256,kernel_size=3,stride=1,padding=1)
-        # # Classification
-        # self.conv6 = nn.Conv2d(in_channels=256,out_channels=256,kernel_size=3,stride=1)
-        # self.conv7 = nn.Conv2d(in_channels=256,out_channels=256,kernel_size=1,stride=1)
-        # self.conv8 = nn.Conv2d(in_channels=256,out_channels=20,kernel_size=1,stride=1)
+
 
     def forward(self, x):
         #TODO: Define forward pass
@@ -174,25 +177,27 @@ def localizer_alexnet(pretrained=False, **kwargs):
         pretrained (bool): If True, returns a model pre-trained on ImageNet
     """
     model = LocalizerAlexNet(**kwargs)
+    model_state = model.state_dict()
     #TODO: Initialize weights correctly based on whethet it is pretrained or
     # not
-    if(pretrained):
-        state_dict = torch.utils.model_zoo.load_url(model_urls['alex_net'])
-        model.conv1.weights.items = state_dict['features.0.weight']
-        model.conv1.bias.items = state_dict['features.0.bias']
+    if(1):
+        state_dict = model_zoo.load_url(model_urls['alex_net'])
+        model_state['features.0.weight'] = state_dict['features.0.weight']
+        model_state['features.0.bias'] = state_dict['features.0.bias']
 
-        model.conv2.weights.items = state_dict['features.3.weight']
-        model.conv2.bias.items = state_dict['features.3.bias']
+        model_state['features.3.weight'] = state_dict['features.3.weight']
+        model_state['features.3.bias'] = state_dict['features.3.bias']
 
-        model.conv3.weights.items = state_dict['features.6.weight']
-        model.conv3.bias.items = state_dict['features.6.bias']
+        model_state['features.6.weight'] = state_dict['features.6.weight']
+        model_state['features.6.bias'] = state_dict['features.6.bias']
 
-        model.conv4.weights.items = state_dict['features.8.weight']
-        model.conv4.bias.items = state_dict['features.8.bias']
+        model_state['features.8.weight'] = state_dict['features.8.weight']
+        model_state['features.8.bias'] = state_dict['features.8.bias']
 
-        model.conv5.weights.items = state_dict['features.10.weight']
-        model.conv5.bias.items = state_dict['features.10.bias']
+        model_state['features.10.weight'] = state_dict['features.10.weight']
+        model_state['features.10.bias'] = state_dict['features.10.bias']
 
+        model.load_state_dict(model_state)
     return model
 
 
@@ -263,7 +268,8 @@ class IMDBDataset(data.Dataset):
         """
         # TODO: Write this function, look at the imagenet code for inspiration
         image_name, target = self.imgs[index]
-        img = default_loader(image_name)
+        img = self.loader(image_name)
+        img = self.transform(image).float()
         # img = (Image.open(image_name), dtype=np.float32)
         # target = np.zeros(len(self.classes))
         # target[self.imdb._load_pascal_annotation(self.imdb.image_index[index])['gt_classes']-1]=1
