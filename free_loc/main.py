@@ -288,7 +288,7 @@ def train(train_loader, model, criterion, optimizer, epoch, args):
             print('Epoch: [{0}][{1}/{2}]\t'
                   'Time {batch_time.val:.3f} ({batch_time.avg:.3f})\t'
                   'Data {data_time.val:.3f} ({data_time.avg:.3f})\t'
-                  'Loss {loss.val:.4f} ({loss.avg:.4f})\t'
+                #   'Loss {loss.val:.4f} ({loss.avg:.4f})\t'
                 #   'Metric1 {avg_m1.val:.3f} ({avg_m1.avg:.3f})\t'
                 #   'Metric2 {avg_m2.val:.3f} ({avg_m2.avg:.3f})'
                 .format(
@@ -296,8 +296,8 @@ def train(train_loader, model, criterion, optimizer, epoch, args):
                       i,
                       len(train_loader),
                       batch_time=batch_time,
-                      data_time=data_time,
-                      loss=losses
+                      data_time=data_time
+                    #   ,loss=losses
                     #   ,avg_m1=avg_m1,
                     #   avg_m2=avg_m2
                       ))
@@ -363,14 +363,14 @@ def validate(val_loader, model, criterion):
         if i % args.print_freq == 0:
             print('Test: [{0}/{1}]\t'
                   'Time {batch_time.val:.3f} ({batch_time.avg:.3f})\t'
-                  'Loss {loss.val:.4f} ({loss.avg:.4f})\t'
+                #   'Loss {loss.val:.4f} ({loss.avg:.4f})\t'
                 #   'Metric1 {avg_m1.val:.3f} ({avg_m1.avg:.3f})\t'
                 #   'Metric2 {avg_m2.val:.3f} ({avg_m2.avg:.3f})'
                   .format(
                       i,
                       len(val_loader),
-                      batch_time=batch_time,
-                      loss=losses
+                      batch_time=batch_time
+                    #   ,loss=losses
                     #   ,avg_m1=avg_m1,
                     #   avg_m2=avg_m2
                       ))
