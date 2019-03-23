@@ -219,11 +219,11 @@ def main():
         adjust_learning_rate(optimizer, epoch)
 
         # train for one epoch
-        train(train_loader, model, criterion, optimizer, epoch, args)
+        train(train_loader, model, criterion, optimizer, epoch, args, writer)
 
         # evaluate on validation set
         if epoch % args.eval_freq == 0 or epoch == args.epochs - 1:
-            m1, m2 = validate(val_loader, model, criterion)
+            m1, m2 = validate(val_loader, model, criterion, writer)
             score = m1 * m2
             # remember best prec@1 and save checkpoint
             is_best = score > best_prec1
@@ -240,7 +240,7 @@ def main():
 
 
 #TODO: You can add input arguments if you wish
-def train(train_loader, model, criterion, optimizer, epoch, args):
+def train(train_loader, model, criterion, optimizer, epoch, args, writer):
     batch_time = AverageMeter()
     data_time = AverageMeter()
     losses = AverageMeter()
@@ -325,7 +325,7 @@ def train(train_loader, model, criterion, optimizer, epoch, args):
         # End of train()
 
 
-def validate(val_loader, model, criterion):
+def validate(val_loader, model, criterion, writer):
     batch_time = AverageMeter()
     losses = AverageMeter()
     avg_m1 = AverageMeter()
