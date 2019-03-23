@@ -46,7 +46,7 @@ def make_dataset(imdb, class_to_idx):
         img_path = imdb.image_path_at(img_num)
         class_indices = np.zeros(imdb.num_classes)
         class_indices[imdb._load_pascal_annotation(img_index)['gt_classes']-1]=1
-        img_class_indices = class_indices.tolist()
+        img_class_indices = class_indices
         dataset_list.append((img_path,img_class_indices))
     return dataset_list
 
