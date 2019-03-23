@@ -181,7 +181,7 @@ def localizer_alexnet(pretrained=False, **kwargs):
     #TODO: Initialize weights correctly based on whethet it is pretrained or
     # not
     if(1):
-        state_dict = model_zoo.load_url(model_urls['alex_net'])
+        state_dict = model_zoo.load_url(model_urls['alexnet'])
         model_state['features.0.weight'] = state_dict['features.0.weight']
         model_state['features.0.bias'] = state_dict['features.0.bias']
 
