@@ -307,7 +307,7 @@ def train(train_loader, model, criterion, optimizer, epoch, args, writer):
         n_iter = epoch*len(train_loader) + i
 
         # Plot the Training Loss
-        writer.add_scalar('train/loss', losses.val, n_iter)
+        writer.add_scalar('train/loss', loss.data[0], n_iter)
 
         # Plot images and heat maps of GT classes for 4 batches (2 images in each batch)
         if( i % 4 == 0 and i>0 and i<20):
