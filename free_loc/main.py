@@ -283,7 +283,7 @@ def train(train_loader, model, criterion, optimizer, epoch, args):
         # measure elapsed time
         batch_time.update(time.time() - end)
         end = time.time()
-
+        print(losses)
         if i % args.print_freq == 0:
             print('Epoch: [{0}][{1}/{2}]\t'
                   'Time {batch_time.val:.3f} ({batch_time.avg:.3f})\t'
@@ -359,7 +359,7 @@ def validate(val_loader, model, criterion):
         # measure elapsed time
         batch_time.update(time.time() - end)
         end = time.time()
-        print(losses)
+        
         if i % args.print_freq == 0:
             print('Test: [{0}/{1}]\t'
                   'Time {batch_time.val:.3f} ({batch_time.avg:.3f})\t'
