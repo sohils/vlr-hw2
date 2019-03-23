@@ -264,6 +264,7 @@ def train(train_loader, model, criterion, optimizer, epoch, args):
         # TODO: Compute loss using ``criterion``
         output = model(input)
         imoutput = F.max_pool2d(output, kernel_size=output.size()[2:])
+        imoutput = imoutput.squeeze()
         loss = criterion(imoutput, target)
 
         # measure metrics and record loss
@@ -342,6 +343,7 @@ def validate(val_loader, model, criterion):
         # TODO: Compute loss using ``criterion``
         output = model(input)
         output = F.max_pool2d(output, kernel_size=output.size()[2:])
+        output = output.squeeze()
         loss = criterion(output, target)
 
 
