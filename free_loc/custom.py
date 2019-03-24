@@ -241,9 +241,9 @@ def compute_ap(gt, pred, valid, average=None):
     Returns:
         AP (list): average precision for all classes
     """
-    gt = gt.numpy()
-    pred = pred.numpy()
-    valid = valid.numpy()
+    gt = gt.data.numpy()
+    pred = pred.data.numpy()
+    # valid = valid.data.numpy()
     nclasses = gt.shape[1]
     AP = []
     for cid in range(nclasses):
