@@ -270,7 +270,7 @@ def train(train_loader, model, criterion, optimizer, epoch, args, writer):
         # measure metrics and record loss
         m1 = metric1(imoutput.data, target)
         m2 = metric2(imoutput.data, target)
-        losses.update(loss.data[0], input.size(0))
+        losses.update(loss.sum().data[0], input.size(0))
         avg_m1.update(m1[0], input.size(0))
         avg_m2.update(m2[0], input.size(0))
 
@@ -297,7 +297,7 @@ def train(train_loader, model, criterion, optimizer, epoch, args, writer):
                       len(train_loader),
                       batch_time=batch_time,
                       data_time=data_time
-                      ,loss=loss.sum().item()
+                      ,loss=losses
                     #   ,avg_m1=avg_m1,
                     #   avg_m2=avg_m2
                       ))
