@@ -168,9 +168,8 @@ def main():
     mean = torch.tensor([0.485, 0.456, 0.406], dtype=torch.float32)
     std = torch.tensor([0.229, 0.224, 0.225], dtype=torch.float32)
 
-    normalize = transforms.Normalize(
-        mean=mean.tolist(), std=std.tolist())
-    unnormalize = transforms.Normalize(mean = (-mean / std).tolist(), (1.0 / std).tolist())
+    normalize = transforms.Normalize(mean=mean.tolist(), std=std.tolist())
+    unnormalize = transforms.Normalize(mean = (-mean / std).tolist(), std=(1.0 / std).tolist())
     train_dataset = IMDBDataset(
         trainval_imdb,
         transforms.Compose([
