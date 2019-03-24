@@ -288,7 +288,7 @@ def train(train_loader, model, criterion, optimizer, epoch, args, writer):
             print('Epoch: [{0}][{1}/{2}]\t'
                   'Time {batch_time.val:.3f} ({batch_time.avg:.3f})\t'
                   'Data {data_time.val:.3f} ({data_time.avg:.3f})\t'
-                #   'Loss {loss.val:.4f} ({loss.avg:.4f})\t'
+                  'Loss {loss.val:.4f} ({loss.avg:.4f})\t'
                 #   'Metric1 {avg_m1.val:.3f} ({avg_m1.avg:.3f})\t'
                 #   'Metric2 {avg_m2.val:.3f} ({avg_m2.avg:.3f})'
                 .format(
@@ -344,10 +344,10 @@ def validate(val_loader, model, criterion, writer):
         # TODO: Get output from model
         # TODO: Perform any necessary functions on the output
         # TODO: Compute loss using ``criterion``
-        output = model(input)
-        output = F.max_pool2d(output, kernel_size=output.size()[2:])
-        output = output.squeeze()
-        loss = criterion(output, target)
+        imoutput = model(input)
+        imoutput = F.max_pool2d(imoutput, kernel_size=imoutput.size()[2:])
+        imoutput = imoutput.squeeze()
+        loss = criterion(imoutput, target)
 
 
         # measure metrics and record loss
@@ -364,14 +364,14 @@ def validate(val_loader, model, criterion, writer):
         if i % args.print_freq == 0:
             print('Test: [{0}/{1}]\t'
                   'Time {batch_time.val:.3f} ({batch_time.avg:.3f})\t'
-                #   'Loss {loss.val:.4f} ({loss.avg:.4f})\t'
+                  'Loss {loss.val:.4f} ({loss.avg:.4f})\t'
                 #   'Metric1 {avg_m1.val:.3f} ({avg_m1.avg:.3f})\t'
                 #   'Metric2 {avg_m2.val:.3f} ({avg_m2.avg:.3f})'
                   .format(
                       i,
                       len(val_loader),
                       batch_time=batch_time
-                    #   ,loss=losses
+                      ,loss=loss.sum().item()
                     #   ,avg_m1=avg_m1,
                     #   avg_m2=avg_m2
                       ))
