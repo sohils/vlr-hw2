@@ -167,7 +167,10 @@ class LocalizerAlexNetHighres(nn.Module):
 
         return x
 
-
+def init_weights(m):
+    if type(m) == nn.Linear or type(m) == nn.Conv2d:
+        torch.nn.init.xavier_uniform(m.weight)
+        m.bias.data.fill_(0.01)
 
 def localizer_alexnet(pretrained=False, **kwargs):
     r"""AlexNet model architecture from the
@@ -177,6 +180,8 @@ def localizer_alexnet(pretrained=False, **kwargs):
         pretrained (bool): If True, returns a model pre-trained on ImageNet
     """
     model = LocalizerAlexNet(**kwargs)
+    model.features.apply(init_weights)
+    model.classifier.apply(init_weights)
     model_state = model.state_dict()
     #TODO: Initialize weights correctly based on whethet it is pretrained or
     # not
