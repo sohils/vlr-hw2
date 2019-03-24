@@ -311,7 +311,8 @@ def train(train_loader, model, criterion, optimizer, epoch, args, writer):
 
         # Plot images and heat maps of GT classes for 4 batches (2 images in each batch)
         if( i % 4 == 0 and i>0 and i<20):
-            writer.add_image('Image', input, n_iter)
+            writer.add_image('Image', input[0], n_iter)
+            writer.add_image('Image', input[2], n_iter)
         # Same in Visdom with Title: <epoch>_<iteration>_<batch_index>_image, <epoch>_<iteration>_<batch_index>_heatmap_<class_name>
 
 
