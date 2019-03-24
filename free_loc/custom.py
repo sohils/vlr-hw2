@@ -12,6 +12,8 @@ import os
 import os.path
 import numpy as np
 
+import sklearn.metrics
+
 IMG_EXTENSIONS = ['.jpg', '.jpeg', '.png', '.ppm', '.bmp', '.pgm']
 
 
