@@ -307,6 +307,8 @@ def train(train_loader, model, criterion, optimizer, epoch, args, writer, vis, u
 
         # Plot the Training Loss
         writer.add_scalar('train/loss', loss.mean().item(), n_iter)
+        writer.add_scalar('train/metric1', m1[0], n_iter)
+        writer.add_scalar('train/metric2', m2[0], n_iter)
 
         # Plot images and heat maps of GT classes for 4 batches (2 images in each batch)
         if( i % 4 == 0 and i>0 and i<20):
@@ -427,13 +429,15 @@ def adjust_learning_rate(optimizer, epoch):
 
 def metric1(output, target):
     # TODO: Ignore for now - proceed till instructed
-    # AP = compute_ap(target, output, np.ones(target.shape))
-    return [0]
+    AP = compute_ap(target, output, np.ones(target.shape))
+    return np.average(AP)
 
 
 def metric2(output, target):
     #TODO: Ignore for now - proceed till instructed
-    return [0]
+    output = F.sigmoid(output)
+    AP = compute_ap(target, output, np.ones(target.shape))
+    return np.average(AP)
 
 
 if __name__ == '__main__':
