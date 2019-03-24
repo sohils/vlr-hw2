@@ -270,14 +270,14 @@ def train(train_loader, model, criterion, optimizer, epoch, args, writer):
         # measure metrics and record loss
         m1 = metric1(imoutput.data, target)
         m2 = metric2(imoutput.data, target)
-        losses.update(loss.sum().item(), input.size(0))
+        losses.update(loss.mean().item(), input.size(0))
         avg_m1.update(m1[0], input.size(0))
         avg_m2.update(m2[0], input.size(0))
 
         # TODO:
         # compute gradient and do SGD step
         optimizer.zero_grad()
-        loss.sum().backward()
+        loss.mean().backward()
         optimizer.step()
 
         # measure elapsed time
@@ -307,7 +307,7 @@ def train(train_loader, model, criterion, optimizer, epoch, args, writer):
         n_iter = epoch*len(train_loader) + i
 
         # Plot the Training Loss
-        writer.add_scalar('train/loss', loss.sum().item(), n_iter)
+        writer.add_scalar('train/loss', loss.mean().item(), n_iter)
 
         # Plot images and heat maps of GT classes for 4 batches (2 images in each batch)
         if( i % 4 == 0 and i>0 and i<20):
@@ -353,7 +353,7 @@ def validate(val_loader, model, criterion, writer):
         # measure metrics and record loss
         m1 = metric1(imoutput.data, target)
         m2 = metric2(imoutput.data, target)
-        losses.update(loss.sum().item(), input.size(0))
+        losses.update(loss.mean().item(), input.size(0))
         avg_m1.update(m1[0], input.size(0))
         avg_m2.update(m2[0], input.size(0))
 
