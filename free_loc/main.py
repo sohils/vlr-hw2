@@ -297,7 +297,7 @@ def train(train_loader, model, criterion, optimizer, epoch, args, writer):
                       len(train_loader),
                       batch_time=batch_time,
                       data_time=data_time
-                    #   ,loss=losses
+                      ,loss=loss.item()
                     #   ,avg_m1=avg_m1,
                     #   avg_m2=avg_m2
                       ))
@@ -307,7 +307,7 @@ def train(train_loader, model, criterion, optimizer, epoch, args, writer):
         n_iter = epoch*len(train_loader) + i
 
         # Plot the Training Loss
-        writer.add_scalar('train/loss', loss.data[0], n_iter)
+        writer.add_scalar('train/loss', loss.item(), n_iter)
 
         # Plot images and heat maps of GT classes for 4 batches (2 images in each batch)
         if( i % 4 == 0 and i>0 and i<20):
@@ -424,6 +424,7 @@ def adjust_learning_rate(optimizer, epoch):
 
 def metric1(output, target):
     # TODO: Ignore for now - proceed till instructed
+    # AP = compute_ap(target, output, np.ones(target.shape))
     return [0]
 
 
