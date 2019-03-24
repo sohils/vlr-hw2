@@ -222,7 +222,7 @@ def main():
 
         # evaluate on validation set
         if epoch % args.eval_freq == 0 or epoch == args.epochs - 1:
-            m1, m2 = validate(val_loader, model, criterion, writer, vis, unnormalize)
+            m1, m2 = validate(val_loader, model, criterion, epoch, writer, vis, unnormalize)
             score = m1 * m2
             # remember best prec@1 and save checkpoint
             is_best = score > best_prec1
@@ -313,13 +313,13 @@ def train(train_loader, model, criterion, optimizer, epoch, args, writer, vis, u
             writer.add_image('Image', unnormalize(input[0]), n_iter)
             writer.add_image('Image', unnormalize(input[2]), n_iter)
         # Same in Visdom with Title: <epoch>_<iteration>_<batch_index>_image, <epoch>_<iteration>_<batch_index>_heatmap_<class_name>
-            vis.image(input[0],opts=dict(title='Image 1', caption='First of the two'))
-            vis.image(input[2],opts=dict(title='Image 2', caption='Second'))
+            vis.image( unnormalize(input[0]),opts=dict(title='Image 1', caption='First of the two'))
+            vis.image( unnormalize(input[2]),opts=dict(title='Image 2', caption='Second'))
 
         # End of train()
 
 
-def validate(val_loader, model, criterion, writer, vis, unnormalize):
+def validate(val_loader, model, criterion, epoch, writer, vis, unnormalize):
     batch_time = AverageMeter()
     losses = AverageMeter()
     avg_m1 = AverageMeter()
@@ -371,14 +371,16 @@ def validate(val_loader, model, criterion, writer, vis, unnormalize):
 
         #TODO: Visualize things as mentioned in handout
         #TODO: Visualize at appropriate intervals
+        n_iter = epoch*len(train_loader) + i
+
         writer.add_scalar('test/loss', loss.mean().item(), n_iter)
 
         if( i % 4 == 0 and i>0 and i<20):
             writer.add_image('Image', unnormalize(input[0]), n_iter)
             writer.add_image('Image', unnormalize(input[2]), n_iter)
         # Same in Visdom with Title: <epoch>_<iteration>_<batch_index>_image, <epoch>_<iteration>_<batch_index>_heatmap_<class_name>
-            vis.image(input[0],opts=dict(title='Image 1', caption='First of the two'))
-            vis.image(input[2],opts=dict(title='Image 2', caption='Second'))
+            vis.image( unnormalize(input[0]),opts=dict(title='Image 1', caption='First of the two'))
+            vis.image( unnormalize(input[2]),opts=dict(title='Image 2', caption='Second'))
 
 
 
