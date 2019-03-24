@@ -208,22 +208,18 @@ def main():
     # modifications to train()
     if args.vis:
         import visdom
-
-
-
-
-
+        vis = visdom.Visdom()
 
 
     for epoch in range(args.start_epoch, args.epochs):
         adjust_learning_rate(optimizer, epoch)
 
         # train for one epoch
-        train(train_loader, model, criterion, optimizer, epoch, args, writer)
+        train(train_loader, model, criterion, optimizer, epoch, args, writer, vis)
 
         # evaluate on validation set
         if epoch % args.eval_freq == 0 or epoch == args.epochs - 1:
-            m1, m2 = validate(val_loader, model, criterion, writer)
+            m1, m2 = validate(val_loader, model, criterion, writer, vis)
             score = m1 * m2
             # remember best prec@1 and save checkpoint
             is_best = score > best_prec1
@@ -240,7 +236,7 @@ def main():
 
 
 #TODO: You can add input arguments if you wish
-def train(train_loader, model, criterion, optimizer, epoch, args, writer):
+def train(train_loader, model, criterion, optimizer, epoch, args, writer, vis):
     batch_time = AverageMeter()
     data_time = AverageMeter()
     losses = AverageMeter()
@@ -314,14 +310,8 @@ def train(train_loader, model, criterion, optimizer, epoch, args, writer):
             writer.add_image('Image', input[0], n_iter)
             writer.add_image('Image', input[2], n_iter)
         # Same in Visdom with Title: <epoch>_<iteration>_<batch_index>_image, <epoch>_<iteration>_<batch_index>_heatmap_<class_name>
-
-
-
-
-
-
-
-
+            vis.image(input[0],opts=dict(title='Image 1', caption='First of the two'))
+            vis.image(input[2],opts=dict(title='Image 2', caption='Second'))
 
         # End of train()
 
@@ -378,7 +368,14 @@ def validate(val_loader, model, criterion, writer):
 
         #TODO: Visualize things as mentioned in handout
         #TODO: Visualize at appropriate intervals
+        writer.add_scalar('test/loss', loss.mean().item(), n_iter)
 
+        if( i % 4 == 0 and i>0 and i<20):
+            writer.add_image('Image', input[0], n_iter)
+            writer.add_image('Image', input[2], n_iter)
+        # Same in Visdom with Title: <epoch>_<iteration>_<batch_index>_image, <epoch>_<iteration>_<batch_index>_heatmap_<class_name>
+            vis.image(input[0],opts=dict(title='Image 1', caption='First of the two'))
+            vis.image(input[2],opts=dict(title='Image 2', caption='Second'))
 
 
 
