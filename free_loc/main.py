@@ -115,7 +115,7 @@ parser.add_argument(
     help='url used to set up distributed training')
 parser.add_argument(
     '--dist-backend', default='gloo', type=str, help='distributed backend')
-parser.add_argument('--vis', action='store_true')
+parser.add_argument('--vis', default=1,action='store_true')
 
 best_prec1 = 0
 
@@ -165,8 +165,12 @@ def main():
     trainval_imdb = get_imdb('voc_2007_trainval')
     test_imdb = get_imdb('voc_2007_test')
 
+    mean = torch.tensor([0.485, 0.456, 0.406], dtype=torch.float32)
+    std = torch.tensor([0.229, 0.224, 0.225], dtype=torch.float32)
+
     normalize = transforms.Normalize(
-        mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
+        mean=mean.tolist(), std=std.tolist())
+    unnormalize = transforms.Normalize(mean = (-mean / std).tolist(), (1.0 / std).tolist())
     train_dataset = IMDBDataset(
         trainval_imdb,
         transforms.Compose([
@@ -215,11 +219,11 @@ def main():
         adjust_learning_rate(optimizer, epoch)
 
         # train for one epoch
-        train(train_loader, model, criterion, optimizer, epoch, args, writer, vis)
+        train(train_loader, model, criterion, optimizer, epoch, args, writer, vis, unnormalize)
 
         # evaluate on validation set
         if epoch % args.eval_freq == 0 or epoch == args.epochs - 1:
-            m1, m2 = validate(val_loader, model, criterion, writer, vis)
+            m1, m2 = validate(val_loader, model, criterion, writer, vis, unnormalize)
             score = m1 * m2
             # remember best prec@1 and save checkpoint
             is_best = score > best_prec1
@@ -236,7 +240,7 @@ def main():
 
 
 #TODO: You can add input arguments if you wish
-def train(train_loader, model, criterion, optimizer, epoch, args, writer, vis):
+def train(train_loader, model, criterion, optimizer, epoch, args, writer, vis, unnormalize):
     batch_time = AverageMeter()
     data_time = AverageMeter()
     losses = AverageMeter()
@@ -307,8 +311,8 @@ def train(train_loader, model, criterion, optimizer, epoch, args, writer, vis):
 
         # Plot images and heat maps of GT classes for 4 batches (2 images in each batch)
         if( i % 4 == 0 and i>0 and i<20):
-            writer.add_image('Image', input[0], n_iter)
-            writer.add_image('Image', input[2], n_iter)
+            writer.add_image('Image', unnormalize(input[0]), n_iter)
+            writer.add_image('Image', unnormalize(input[2]), n_iter)
         # Same in Visdom with Title: <epoch>_<iteration>_<batch_index>_image, <epoch>_<iteration>_<batch_index>_heatmap_<class_name>
             vis.image(input[0],opts=dict(title='Image 1', caption='First of the two'))
             vis.image(input[2],opts=dict(title='Image 2', caption='Second'))
@@ -316,7 +320,7 @@ def train(train_loader, model, criterion, optimizer, epoch, args, writer, vis):
         # End of train()
 
 
-def validate(val_loader, model, criterion, writer):
+def validate(val_loader, model, criterion, writer, vis, unnormalize):
     batch_time = AverageMeter()
     losses = AverageMeter()
     avg_m1 = AverageMeter()
@@ -371,8 +375,8 @@ def validate(val_loader, model, criterion, writer):
         writer.add_scalar('test/loss', loss.mean().item(), n_iter)
 
         if( i % 4 == 0 and i>0 and i<20):
-            writer.add_image('Image', input[0], n_iter)
-            writer.add_image('Image', input[2], n_iter)
+            writer.add_image('Image', unnormalize(input[0]), n_iter)
+            writer.add_image('Image', unnormalize(input[2]), n_iter)
         # Same in Visdom with Title: <epoch>_<iteration>_<batch_index>_image, <epoch>_<iteration>_<batch_index>_heatmap_<class_name>
             vis.image(input[0],opts=dict(title='Image 1', caption='First of the two'))
             vis.image(input[2],opts=dict(title='Image 2', caption='Second'))
