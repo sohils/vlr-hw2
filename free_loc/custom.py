@@ -241,8 +241,8 @@ def compute_ap(gt, pred, valid, average=None):
     Returns:
         AP (list): average precision for all classes
     """
-    gt = gt.data.numpy()
-    pred = pred.data.numpy()
+    gt = gt.cpu().numpy()
+    pred = pred.cpu().numpy()
     # valid = valid.data.numpy()
     nclasses = gt.shape[1]
     AP = []
