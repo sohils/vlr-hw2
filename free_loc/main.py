@@ -323,7 +323,7 @@ def train(train_loader, model, criterion, optimizer, epoch, args, writer, vis, u
         # End of train()
 
 
-“def validate(val_loader, model, criterion, epoch, writer, vis, unnormalize):
+def validate(val_loader, model, criterion, epoch, writer, vis, unnormalize):
     batch_time = AverageMeter()
     losses = AverageMeter()
     avg_m1 = AverageMeter()
