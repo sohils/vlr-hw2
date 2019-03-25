@@ -248,6 +248,7 @@ def compute_ap(gt, pred, valid, average=None):
     # valid = valid.data.numpy()
     nclasses = gt.shape[1]
     AP = []
+    pdb.set_trace()
     for cid in range(nclasses):
         gt_cls = gt[:, cid].astype('float32')
         pred_cls = pred[:, cid].astype('float32')

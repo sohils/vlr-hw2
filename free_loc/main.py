@@ -6,6 +6,7 @@ import sys
 sys.path.insert(0, 'faster_rcnn')
 import sklearn
 import sklearn.metrics
+import pdb
 
 import torch
 import torch.nn as nn
@@ -271,8 +272,8 @@ def train(train_loader, model, criterion, optimizer, epoch, args, writer, vis, u
         m1 = metric1(imoutput.data, target)
         m2 = metric2(imoutput.data, target)
         losses.update(loss.mean().item(), input.size(0))
-        avg_m1.update(m1, input.size(0))
-        avg_m2.update(m2, input.size(0))
+        avg_m1.update(m1[0], input.size(0))
+        avg_m2.update(m2[0], input.size(0))
 
         # TODO:
         # compute gradient and do SGD step
@@ -308,8 +309,8 @@ def train(train_loader, model, criterion, optimizer, epoch, args, writer, vis, u
 
         # Plot the Training Loss
         writer.add_scalar('train/loss', loss.mean().item(), n_iter)
-        writer.add_scalar('train/metric1', m1, n_iter)
-        writer.add_scalar('train/metric2', m2, n_iter)
+        writer.add_scalar('train/metric1', m1[0], n_iter)
+        writer.add_scalar('train/metric2', m2[0], n_iter)
 
         # Plot images and heat maps of GT classes for 4 batches (2 images in each batch)
         if( i % 4 == 0 and i>0 and i<20):
@@ -322,7 +323,7 @@ def train(train_loader, model, criterion, optimizer, epoch, args, writer, vis, u
         # End of train()
 
 
-def validate(val_loader, model, criterion, epoch, writer, vis, unnormalize):
+“def validate(val_loader, model, criterion, epoch, writer, vis, unnormalize):
     batch_time = AverageMeter()
     losses = AverageMeter()
     avg_m1 = AverageMeter()
@@ -351,8 +352,8 @@ def validate(val_loader, model, criterion, epoch, writer, vis, unnormalize):
         m1 = metric1(imoutput.data, target)
         m2 = metric2(imoutput.data, target)
         losses.update(loss.mean().item(), input.size(0))
-        avg_m1.update(m1, input.size(0))
-        avg_m2.update(m2, input.size(0))
+        avg_m1.update(m1[0], input.size(0))
+        avg_m2.update(m2[0], input.size(0))
 
         # measure elapsed time
         batch_time.update(time.time() - end)
@@ -432,14 +433,17 @@ def adjust_learning_rate(optimizer, epoch):
 def metric1(output, target):
     # TODO: Ignore for now - proceed till instructed
     AP = compute_ap(target, output, np.ones(target.shape))
-    return np.average(AP)
+    pdb.set_trace()
+    mAP = np.mean(AP)
+    return [mAP]
 
 
 def metric2(output, target):
     #TODO: Ignore for now - proceed till instructed
     # output = F.sigmoid(output)
     AP = compute_ap(target, output, np.ones(target.shape))
-    return np.average(AP)
+    mAP = np.mean(AP)
+    return [mAP]
 
 
 if __name__ == '__main__':
