@@ -253,11 +253,14 @@ def compute_ap(gt, pred, valid, average=None):
     for cid in range(nclasses):
         gt_cls = gt[:, cid].astype('float32')
         pred_cls = pred[:, cid].astype('float32')
-        # As per PhilK. code:
-        # https://github.com/philkr/voc-classification/blob/master/src/train_cls.py
-        pred_cls -= 1e-5 * gt_cls
-        ap = sklearn.metrics.average_precision_score(
-            gt_cls, pred_cls, average=average)
+        if(np.count_nonzero(gt_cls) == 0):
+            ap = 1
+        else:
+            # As per PhilK. code:
+            # https://github.com/philkr/voc-classification/blob/master/src/train_cls.py
+            pred_cls -= 1e-5 * gt_cls
+            ap = sklearn.metrics.average_precision_score(
+                gt_cls, pred_cls, average=average)
         AP.append(ap)
     return AP
 
