@@ -138,7 +138,7 @@ def main():
 
     # TODO:
     # define loss function (criterion) and optimizer
-    criterion = nn.SoftMarginLoss(reduction='none')
+    criterion = nn.BCELoss()
 
     optimizer = torch.optim.SGD(model.parameters(), args.lr,
                                 momentum=args.momentum,
