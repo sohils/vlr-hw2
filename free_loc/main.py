@@ -342,6 +342,7 @@ def validate(val_loader, model, criterion, epoch, writer, vis, unnormalize):
         imoutput = model(input)
         imoutput = F.max_pool2d(imoutput, kernel_size=imoutput.size()[2:])
         imoutput = imoutput.squeeze()
+        imoutput = F.sigmoid(imoutput)
         loss = criterion(imoutput, target)
 
 
@@ -435,7 +436,7 @@ def metric1(output, target):
 
 def metric2(output, target):
     #TODO: Ignore for now - proceed till instructed
-    output = F.sigmoid(output)
+    # output = F.sigmoid(output)
     AP = compute_ap(target, output, np.ones(target.shape))
     return np.average(AP)
 
