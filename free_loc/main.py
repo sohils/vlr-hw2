@@ -433,7 +433,7 @@ def adjust_learning_rate(optimizer, epoch):
 def metric1(output, target):
     # TODO: Ignore for now - proceed till instructed
     AP = compute_ap(target, output, np.ones(target.shape))
-    pdb.set_trace()
+    # pdb.set_trace()
     mAP = np.mean(AP)
     return [mAP]
 
