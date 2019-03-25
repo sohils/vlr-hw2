@@ -264,6 +264,7 @@ def train(train_loader, model, criterion, optimizer, epoch, args, writer, vis, u
         output = model(input)
         imoutput = F.max_pool2d(output, kernel_size=output.size()[2:])
         imoutput = imoutput.squeeze()
+        imoutput = F.sigmoid(imoutput)
         loss = criterion(imoutput, target)
 
         # measure metrics and record loss
