@@ -271,12 +271,12 @@ def main():
         for j in range(20):
             t = target[j].type(torch.FloatTensor).cuda(async=True)
             output = model(input[j])
-            vis.image(convert_0_1(input) ,opts=dict(title='random_valid_'+str(i)))
+            vis.image(convert_0_1(input) ,opts=dict(title='random_valid_'+str(j)))
             for index in t.nonzero():
                 ind = index.cpu().numpy()[0]
                 heatmapimage_ = output[ind]
                 heatmapimage_ = display_heatmap(heatmapimage_, input.size()[2:])
-                vis.heatmap( heatmapimage_,opts=dict(title='random_valid_heatmap_'+str(class_names[ind])))
+                vis.heatmap( heatmapimage_,opts=dict(title='random_valid_heatmap_'+str(j)+str(class_names[ind])))
 
 
 
