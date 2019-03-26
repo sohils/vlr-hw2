@@ -241,29 +241,30 @@ def main():
         vis = visdom.Visdom()
 
 
-    for epoch in range(args.start_epoch, args.epochs):
-        adjust_learning_rate(optimizer, epoch)
+    # for epoch in range(args.start_epoch, args.epochs):
+    #     adjust_learning_rate(optimizer, epoch)
 
-        # train for one epoch
-        train(train_loader, model, criterion, optimizer, epoch, args, writer, vis, unnormalize)
+    #     # train for one epoch
+    #     train(train_loader, model, criterion, optimizer, epoch, args, writer, vis, unnormalize)
 
-        # evaluate on validation set
-        if epoch % args.eval_freq == 0 or epoch == args.epochs - 1:
-            m1, m2 = validate(val_loader, model, criterion, epoch, writer, vis, unnormalize)
-            score = m1 * m2
-            # remember best prec@1 and save checkpoint
-            is_best = score > best_prec1
-            best_prec1 = max(score, best_prec1)
-            save_checkpoint({
-                'epoch': epoch + 1,
-                'arch': args.arch,
-                'state_dict': model.state_dict(),
-                'best_prec1': best_prec1,
-                'optimizer': optimizer.state_dict(),
-            }, is_best)
+    #     # evaluate on validation set
+    #     if epoch % args.eval_freq == 0 or epoch == args.epochs - 1:
+    #         m1, m2 = validate(val_loader, model, criterion, epoch, writer, vis, unnormalize)
+    #         score = m1 * m2
+    #         # remember best prec@1 and save checkpoint
+    #         is_best = score > best_prec1
+    #         best_prec1 = max(score, best_prec1)
+    #         save_checkpoint({
+    #             'epoch': epoch + 1,
+    #             'arch': args.arch,
+    #             'state_dict': model.state_dict(),
+    #             'best_prec1': best_prec1,
+    #             'optimizer': optimizer.state_dict(),
+    #         }, is_best)
     
     # Display 20 randomly chosen images.
     for i, (input, target) in enumerate(val_loader):
+        pdb.set_trace()
         # Select only 20
         input = input[0:20]
         target = target[0:20]
@@ -277,6 +278,7 @@ def main():
                 heatmapimage_ = output[ind]
                 heatmapimage_ = display_heatmap(heatmapimage_, input.size()[2:])
                 vis.heatmap( heatmapimage_,opts=dict(title='random_valid_heatmap_'+str(j)+str(class_names[ind])))
+        break
 
 
 
