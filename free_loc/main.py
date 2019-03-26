@@ -130,7 +130,7 @@ def display_heatmap(image, s):
     heatmap = F.upsample(image.unsqueeze(0).unsqueeze(0), s)
     heatmap_range = heatmap.max() - heatmap.min()
     heatmap = (heatmap - heatmap.min())/heatmap_range
-    return heatmap
+    return heatmap.squeeze()
 
 def main():
     global args, best_prec1
