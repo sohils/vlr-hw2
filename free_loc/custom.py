@@ -143,9 +143,9 @@ class LocalizerAlexNet(nn.Module):
 
 
 
-class LocalizerAlexNetHighres(nn.Module):
+class LocalizerAlexNetRobust(nn.Module):
     def __init__(self, num_classes=20):
-        super(LocalizerAlexNetHighres, self).__init__()
+        super(LocalizerAlexNetRobust, self).__init__()
         #TODO: Ignore for now until instructed
         self.features = nn.Sequential(
             nn.Conv2d(3, 64, kernel_size=11, stride=4, padding=2),
