@@ -120,6 +120,17 @@ parser.add_argument('--vis', default=1,action='store_true')
 
 best_prec1 = 0
 
+class_names = ('aeroplane', 'bicycle', 'bird', 'boat',
+                     'bottle', 'bus', 'car', 'cat', 'chair',
+                     'cow', 'diningtable', 'dog', 'horse',
+                     'motorbike', 'person', 'pottedplant',
+                     'sheep', 'sofa', 'train', 'tvmonitor')
+
+def display_heatmap(image, s):
+    heatmap = F.upsample(image, s)
+    heatmap_range = heatmap.max() - heatmap.min()
+    heatmap = (heatmap - heatmap.min())/heatmap_range
+    return heatmap
 
 def main():
     global args, best_prec1
@@ -316,9 +327,26 @@ def train(train_loader, model, criterion, optimizer, epoch, args, writer, vis, u
         if( i % 4 == 0 and i>0 and i<20):
             writer.add_image('Image', unnormalize(input[0]), n_iter)
             writer.add_image('Image', unnormalize(input[2]), n_iter)
+
+            # HeatMap for first one
+            for index in target[0].nonzero():
+                ind = index.cpu().numpy()[0]
+                heatmapimage_ = output[0,ind]
+                heatmapimage_ = display_heatmap(input.size()[2:])
+                writer.add_image('HeatMap', heatmapimage_, n_iter)
+                vis.image( heatmapimage_,opts=dict(title=str(epoch)+'_'+str(n_iter)+'_'+str(i)+'_heatmap_'+str(class_names[ind])))
+
+            # HeatMap for second one
+            for index in target[2].nonzero():
+                ind = index.cpu().numpy()[0]
+                heatmapimage_ = output[2,ind]
+                heatmapimage_ = display_heatmap(input.size()[2:])
+                writer.add_image('HeatMap', heatmapimage_, n_iter)
+                vis.image( heatmapimage_,opts=dict(title=str(epoch)+'_'+str(n_iter)+'_'+str(i)+'_heatmap_'+str(class_names[ind])))
+
         # Same in Visdom with Title: <epoch>_<iteration>_<batch_index>_image, <epoch>_<iteration>_<batch_index>_heatmap_<class_name>
-            vis.image( input[0],opts=dict(title='Train Image 1', caption='First of the two'))
-            vis.image( input[2],opts=dict(title='Train Image 2', caption='Second'))
+            vis.image( input[0],opts=dict(title=str(epoch)+'_'+str(n_iter)+'_'+str(i)+'_image'))
+            vis.image( input[2],opts=dict(title=str(epoch)+'_'+str(n_iter)+'_'+str(i)+'_image'))
 
         # End of train()
 
@@ -380,12 +408,15 @@ def validate(val_loader, model, criterion, epoch, writer, vis, unnormalize):
 
         writer.add_scalar('test/loss', loss.mean().item(), n_iter)
 
-        if( i % 4 == 0 and i>0 and i<20):
-            writer.add_image('Image', unnormalize(input[0]), n_iter)
-            writer.add_image('Image', unnormalize(input[2]), n_iter)
-        # Same in Visdom with Title: <epoch>_<iteration>_<batch_index>_image, <epoch>_<iteration>_<batch_index>_heatmap_<class_name>
-            vis.image( input[0],opts=dict(title='Test Image 1', caption='First of the two'))
-            vis.image( input[2],opts=dict(title='Test Image 2', caption='Second'))
+        # if( i % 4 == 0 and i>0 and i<20):
+        #     writer.add_image('Image', unnormalize(input[0]), n_iter)
+        #     writer.add_image('Image', unnormalize(input[2]), n_iter)
+
+        #     # HeatMap
+            
+        # # Same in Visdom with Title: <epoch>_<iteration>_<batch_index>_image, <epoch>_<iteration>_<batch_index>_heatmap_<class_name>
+        #     vis.image( input[0],opts=dict(title='Test Image 1', caption='First of the two'))
+        #     vis.image( input[2],opts=dict(title='Test Image 2', caption='Second'))
 
 
 
