@@ -276,7 +276,7 @@ def train(train_loader, model, criterion, optimizer, epoch, args, writer, vis, u
         output = model(input)
         imoutput = F.max_pool2d(output, kernel_size=output.size()[2:])
         imoutput = imoutput.squeeze()
-        imoutput = F.sigmoid(imoutput)
+        imoutput = torch.sigmoid(imoutput)
         loss = criterion(imoutput, target)
 
         # measure metrics and record loss
@@ -472,6 +472,7 @@ def metric1(output, target):
 def metric2(output, target):
     #TODO: Ignore for now - proceed till instructed
     # output = F.sigmoid(output)
+    output = output>0.5
     F_score = compute_f1(target, output)
     mF_score = np.mean(F_score)
     return [mF_score]
