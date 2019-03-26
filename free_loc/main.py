@@ -127,7 +127,7 @@ class_names = ('aeroplane', 'bicycle', 'bird', 'boat',
                      'sheep', 'sofa', 'train', 'tvmonitor')
 
 def display_heatmap(image, s):
-    heatmap = F.upsample(image, s)
+    heatmap = F.upsample(image.unsqueeze(0).unsqueeze(0), s)
     heatmap_range = heatmap.max() - heatmap.min()
     heatmap = (heatmap - heatmap.min())/heatmap_range
     return heatmap
