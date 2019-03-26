@@ -265,13 +265,13 @@ def main():
     # Display 20 randomly chosen images.
     for i, (input, target) in enumerate(val_loader):
         # Select only 20
-        input = input[20]
-        target = target[20]
+        input = input[0:20]
+        target = target[0:20]
         # Rest is similar
         for j in range(20):
             t = target[j].type(torch.FloatTensor).cuda(async=True)
-            output = model(input[j])
-            vis.image(convert_0_1(input) ,opts=dict(title='random_valid_'+str(j)))
+            output = model(input[j].unsqueeze(0))
+            vis.image(convert_0_1(input[j]) ,opts=dict(title='random_valid_'+str(j)))
             for index in t.nonzero():
                 ind = index.cpu().numpy()[0]
                 heatmapimage_ = output[ind]
