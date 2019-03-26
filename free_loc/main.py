@@ -185,6 +185,9 @@ def main():
     mean = torch.tensor([0.485, 0.456, 0.406], dtype=torch.float32)
     std = torch.tensor([0.229, 0.224, 0.225], dtype=torch.float32)
 
+    if torch.cuda.is_available():
+        torch.cuda.manual_seed_all(5)
+
     normalize = transforms.Normalize(mean=mean.tolist(), std=std.tolist())
     unnormalize = transforms.Normalize(mean = (-mean / std).tolist(), std=(1.0 / std).tolist())
     train_dataset = IMDBDataset(
@@ -327,6 +330,8 @@ def train(train_loader, model, criterion, optimizer, epoch, args, writer, vis, u
         writer.add_scalar('train/loss', loss.mean().item(), n_iter)
         writer.add_scalar('train/metric1', m1[0], n_iter)
         writer.add_scalar('train/metric2', m2[0], n_iter)
+        writer.add_scalar('train/metric1avg', avg_m1.avg, n_iter)
+        writer.add_scalar('train/metric2avg', avg_m2.avg, n_iter)
 
         # Plot images and heat maps of GT classes for 4 batches (2 images in each batch)
         if( i % 4 == 0 and i>0 and i<20):
