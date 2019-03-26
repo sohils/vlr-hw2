@@ -147,27 +147,34 @@ class LocalizerAlexNetHighres(nn.Module):
     def __init__(self, num_classes=20):
         super(LocalizerAlexNetHighres, self).__init__()
         #TODO: Ignore for now until instructed
-
-
-
-
-
-
-
-
+        self.features = nn.Sequential(
+            nn.Conv2d(3, 64, kernel_size=11, stride=4, padding=2),
+            nn.ReLU(inplace=True),
+            nn.MaxPool2d(kernel_size=3, stride=2, dilation=1, ceil_mode=False),
+            nn.Conv2d(64, 192, kernel_size=5, stride=1, padding=1),
+            nn.ReLU(inplace=True),
+            nn.MaxPool2d(kernel_size=3, stride=2, dilation=1, ceil_mode=False),
+            nn.Conv2d(192, 384, kernel_size=3, stride=1, padding=1),
+            nn.ReLU(inplace=True),
+            nn.Conv2d(384, 256, kernel_size=3, stride=1, padding=1),
+            nn.ReLU(inplace=True),
+            nn.Conv2d(256, 256, kernel_size=3, stride=1, padding=1),
+            nn.ReLU(inplace=True)
+            # nn.MaxPool2d(kernel_size=3, stride=2, dilation=1),
+        )
+        self.classifier = nn.Sequential(
+            nn.Conv2d(256, 256, kernel_size=3, stride=1, padding=1),
+            nn.ReLU(inplace=True),
+            nn.Conv2d(256, 256, kernel_size=3, stride=1, padding=1),
+            nn.ReLU(inplace=True),
+            nn.Conv2d(256, 20, kernel_size=3, stride=1, padding=1),
+            nn.Dropout2d(0.5)
+        )
 
     def forward(self, x):
         #TODO: Ignore for now until instructed
-
-
-
-
-
-
-
-
-
-
+        x = self.features(x)
+        x = self.classifier(x)
         return x
 
 def init_weights(m):
@@ -221,14 +228,29 @@ def localizer_alexnet_robust(pretrained=False, **kwargs):
     """
     model = LocalizerAlexNetRobust(**kwargs)
     #TODO: Ignore for now until instructed
+    model.features.apply(init_weights)
+    model.classifier.apply(init_weights)
+    model_state = model.state_dict()
+    #TODO: Initialize weights correctly based on whethet it is pretrained or
+    # not
+    if(1):
+        state_dict = model_zoo.load_url(model_urls['alexnet'])
+        model_state['features.0.weight'] = state_dict['features.0.weight']
+        model_state['features.0.bias'] = state_dict['features.0.bias']
 
+        model_state['features.3.weight'] = state_dict['features.3.weight']
+        model_state['features.3.bias'] = state_dict['features.3.bias']
 
+        model_state['features.6.weight'] = state_dict['features.6.weight']
+        model_state['features.6.bias'] = state_dict['features.6.bias']
 
+        model_state['features.8.weight'] = state_dict['features.8.weight']
+        model_state['features.8.bias'] = state_dict['features.8.bias']
 
+        model_state['features.10.weight'] = state_dict['features.10.weight']
+        model_state['features.10.bias'] = state_dict['features.10.bias']
 
-
-
-
+        model.load_state_dict(model_state)
     return model
 
 def compute_ap(gt, pred, valid, average=None):

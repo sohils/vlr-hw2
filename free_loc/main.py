@@ -261,6 +261,9 @@ def main():
                 'best_prec1': best_prec1,
                 'optimizer': optimizer.state_dict(),
             }, is_best)
+    
+    # Display 20 randomly chosen images.
+    
 
 
 
