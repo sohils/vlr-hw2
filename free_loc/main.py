@@ -126,10 +126,15 @@ class_names = ('aeroplane', 'bicycle', 'bird', 'boat',
                      'motorbike', 'person', 'pottedplant',
                      'sheep', 'sofa', 'train', 'tvmonitor')
 
+def convert_0_1(image):
+    image_range = image.max() - image.min()
+    if(image_range>0):
+        image = (image - image.min())/image_range
+    return image
+
 def display_heatmap(image, s):
     heatmap = F.upsample(image.unsqueeze(0).unsqueeze(0), s)
-    heatmap_range = heatmap.max() - heatmap.min()
-    heatmap = (heatmap - heatmap.min())/heatmap_range
+    heatmap = convert_0_1(heatmap)
     return heatmap.squeeze()
 
 def main():
@@ -345,8 +350,8 @@ def train(train_loader, model, criterion, optimizer, epoch, args, writer, vis, u
                 vis.heatmap( heatmapimage_,opts=dict(title=str(epoch)+'_'+str(n_iter)+'_'+str(i)+'_heatmap_'+str(class_names[ind])))
 
         # Same in Visdom with Title: <epoch>_<iteration>_<batch_index>_image, <epoch>_<iteration>_<batch_index>_heatmap_<class_name>
-            vis.image( unnormalize(input[0]),opts=dict(title=str(epoch)+'_'+str(n_iter)+'_'+str(i)+'_image'))
-            vis.image( unnormalize(input[2]),opts=dict(title=str(epoch)+'_'+str(n_iter)+'_'+str(i)+'_image'))
+            vis.image( convert_0_1(input[0]),opts=dict(title=str(epoch)+'_'+str(n_iter)+'_'+str(i)+'_image'))
+            vis.image( convert_0_1(input[2]),opts=dict(title=str(epoch)+'_'+str(n_iter)+'_'+str(i)+'_image'))
 
         # End of train()
 
@@ -372,7 +377,7 @@ def validate(val_loader, model, criterion, epoch, writer, vis, unnormalize):
         imoutput = model(input)
         imoutput = F.max_pool2d(imoutput, kernel_size=imoutput.size()[2:])
         imoutput = imoutput.squeeze()
-        imoutput = F.sigmoid(imoutput)
+        imoutput = torch.sigmoid(imoutput)
         loss = criterion(imoutput, target)
 
 
