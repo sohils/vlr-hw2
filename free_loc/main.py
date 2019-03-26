@@ -273,7 +273,7 @@ def main():
     for i, (input, target) in enumerate(random_images):
         target = target.type(torch.FloatTensor).cuda(async=True)
         output = model(input)
-        vis.image(convert_0_1(input), ,opts=dict(title='random_valid_'+str(i)))
+        vis.image(convert_0_1(input) ,opts=dict(title='random_valid_'+str(i)))
         for index in target.nonzero():
             ind = index.cpu().numpy()[0]
             heatmapimage_ = output[0,ind]
