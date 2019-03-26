@@ -263,8 +263,22 @@ def main():
             }, is_best)
     
     # Display 20 randomly chosen images.
-    
-
+    random_images = torch.utils.data.RandomSampler(IMDBDataset(
+            test_imdb,
+            transforms.Compose([
+                transforms.Resize((384, 384)),
+                transforms.ToTensor(),
+                normalize,
+            ])), num_samples=20, replacement=False)
+    for i, (input, target) in enumerate(random_images):
+        target = target.type(torch.FloatTensor).cuda(async=True)
+        output = model(input)
+        vis.image(convert_0_1(input), ,opts=dict(title='random_valid_'+str(i)))
+        for index in target.nonzero():
+            ind = index.cpu().numpy()[0]
+            heatmapimage_ = output[0,ind]
+            heatmapimage_ = display_heatmap(heatmapimage_, input.size()[2:])
+            vis.heatmap( heatmapimage_,opts=dict(title='random_valid_heatmap_'+str(class_names[ind])))
 
 
 
