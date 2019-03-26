@@ -264,6 +264,17 @@ def compute_ap(gt, pred, valid, average=None):
         AP.append(ap)
     return AP
 
+def compute_f1(gt, pred):
+    gt = gt.cpu().numpy()
+    pred = pred.cpu().numpy()
+    nclasses = gt.shape[1]
+    F_score = []
+    for cid in range(nclasses):
+        gt_cls = gt[:, cid].astype('float32')
+        pred_cls = pred[:, cid].astype('float32')
+        fscore = sklearn.metrics.f1_score(gt_clr,pred_cls)
+        F_score.append(fscore)
+    return F_score
 
 class IMDBDataset(data.Dataset):
     """A dataloader that reads imagesfrom imdbs

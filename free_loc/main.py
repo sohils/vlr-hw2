@@ -472,9 +472,9 @@ def metric1(output, target):
 def metric2(output, target):
     #TODO: Ignore for now - proceed till instructed
     # output = F.sigmoid(output)
-    AP = compute_ap(target, output, np.ones(target.shape))
-    mAP = np.mean(AP)
-    return [mAP]
+    F_score = compute_f1(target, output)
+    mF_score = np.mean(F_score)
+    return [mF_score]
 
 
 if __name__ == '__main__':
