@@ -325,28 +325,28 @@ def train(train_loader, model, criterion, optimizer, epoch, args, writer, vis, u
 
         # Plot images and heat maps of GT classes for 4 batches (2 images in each batch)
         if( i % 4 == 0 and i>0 and i<20):
-            writer.add_image('Image', unnormalize(input[0]), n_iter)
-            writer.add_image('Image', unnormalize(input[2]), n_iter)
+            writer.add_image('Image1', unnormalize(input[0]), n_iter)
+            writer.add_image('Image2', unnormalize(input[2]), n_iter)
 
             # HeatMap for first one
             for index in target[0].nonzero():
                 ind = index.cpu().numpy()[0]
                 heatmapimage_ = output[0,ind]
                 heatmapimage_ = display_heatmap(heatmapimage_, input.size()[2:])
-                writer.add_image('HeatMap', heatmapimage_.unsqueeze(0), n_iter)
-                vis.image( heatmapimage_,opts=dict(title=str(epoch)+'_'+str(n_iter)+'_'+str(i)+'_heatmap_'+str(class_names[ind])))
+                writer.add_image('HeatMap1', heatmapimage_.unsqueeze(0), n_iter)
+                vis.heatmap( heatmapimage_,opts=dict(title=str(epoch)+'_'+str(n_iter)+'_'+str(i)+'_heatmap_'+str(class_names[ind])))
 
             # HeatMap for second one
             for index in target[2].nonzero():
                 ind = index.cpu().numpy()[0]
                 heatmapimage_ = output[2,ind]
                 heatmapimage_ = display_heatmap(heatmapimage_, input.size()[2:])
-                writer.add_image('HeatMap', heatmapimage_.unsqueeze(0), n_iter)
-                vis.image( heatmapimage_,opts=dict(title=str(epoch)+'_'+str(n_iter)+'_'+str(i)+'_heatmap_'+str(class_names[ind])))
+                writer.add_image('HeatMap2', heatmapimage_.unsqueeze(0), n_iter)
+                vis.heatmap( heatmapimage_,opts=dict(title=str(epoch)+'_'+str(n_iter)+'_'+str(i)+'_heatmap_'+str(class_names[ind])))
 
         # Same in Visdom with Title: <epoch>_<iteration>_<batch_index>_image, <epoch>_<iteration>_<batch_index>_heatmap_<class_name>
-            vis.image( input[0],opts=dict(title=str(epoch)+'_'+str(n_iter)+'_'+str(i)+'_image'))
-            vis.image( input[2],opts=dict(title=str(epoch)+'_'+str(n_iter)+'_'+str(i)+'_image'))
+            vis.image( unnormalize(input[0]),opts=dict(title=str(epoch)+'_'+str(n_iter)+'_'+str(i)+'_image'))
+            vis.image( unnormalize(input[2]),opts=dict(title=str(epoch)+'_'+str(n_iter)+'_'+str(i)+'_image'))
 
         # End of train()
 
