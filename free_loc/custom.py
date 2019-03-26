@@ -272,7 +272,10 @@ def compute_f1(gt, pred):
     for cid in range(nclasses):
         gt_cls = gt[:, cid].astype('float32')
         pred_cls = pred[:, cid].astype('float32')
-        fscore = sklearn.metrics.f1_score(gt_cls,pred_cls)
+        if(np.count_nonzero(gt_cls) == 0):
+            fscore = 0
+        else:
+            fscore = sklearn.metrics.f1_score(gt_cls,pred_cls)
         F_score.append(fscore)
     return F_score
 
