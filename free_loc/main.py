@@ -275,7 +275,7 @@ def main():
             vis.image(convert_0_1(input[j]) ,opts=dict(title='random_valid_'+str(j)))
             for index in t.nonzero():
                 ind = index.cpu().numpy()[0]
-                heatmapimage_ = output.unsqueeze()[ind]
+                heatmapimage_ = output.unsqueeze(0)[ind]
                 heatmapimage_ = display_heatmap(heatmapimage_, input.size()[2:])
                 vis.heatmap( heatmapimage_,opts=dict(title='random_valid_heatmap_'+str(j)+str(class_names[ind])))
         break
