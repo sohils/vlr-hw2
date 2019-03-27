@@ -241,26 +241,26 @@ def main():
         vis = visdom.Visdom()
 
 
-    # for epoch in range(args.start_epoch, args.epochs):
-    #     adjust_learning_rate(optimizer, epoch)
+    for epoch in range(args.start_epoch, args.epochs):
+        adjust_learning_rate(optimizer, epoch)
 
-    #     # train for one epoch
-    #     train(train_loader, model, criterion, optimizer, epoch, args, writer, vis, unnormalize)
+        # train for one epoch
+        train(train_loader, model, criterion, optimizer, epoch, args, writer, vis, unnormalize)
 
-    #     # evaluate on validation set
-    #     if epoch % args.eval_freq == 0 or epoch == args.epochs - 1:
-    #         m1, m2 = validate(val_loader, model, criterion, epoch, writer, vis, unnormalize)
-    #         score = m1 * m2
-    #         # remember best prec@1 and save checkpoint
-    #         is_best = score > best_prec1
-    #         best_prec1 = max(score, best_prec1)
-    #         save_checkpoint({
-    #             'epoch': epoch + 1,
-    #             'arch': args.arch,
-    #             'state_dict': model.state_dict(),
-    #             'best_prec1': best_prec1,
-    #             'optimizer': optimizer.state_dict(),
-    #         }, is_best)
+        # evaluate on validation set
+        if epoch % args.eval_freq == 0 or epoch == args.epochs - 1:
+            m1, m2 = validate(val_loader, model, criterion, epoch, writer, vis, unnormalize)
+            score = m1 * m2
+            # remember best prec@1 and save checkpoint
+            is_best = score > best_prec1
+            best_prec1 = max(score, best_prec1)
+            save_checkpoint({
+                'epoch': epoch + 1,
+                'arch': args.arch,
+                'state_dict': model.state_dict(),
+                'best_prec1': best_prec1,
+                'optimizer': optimizer.state_dict(),
+            }, is_best)
     
     # Display 20 randomly chosen images.
     for i, (input, target) in enumerate(val_loader):
@@ -354,8 +354,12 @@ def train(train_loader, model, criterion, optimizer, epoch, args, writer, vis, u
             writer.add_scalar('train/loss', loss.mean().item(), n_iter)
             writer.add_scalar('train/metric1', m1[0], n_iter)
             writer.add_scalar('train/metric2', m2[0], n_iter)
-            writer.add_scalar('train/metric1avg', avg_m1.avg, n_iter)
-            writer.add_scalar('train/metric2avg', avg_m2.avg, n_iter)
+            writer.add_scalar('train/meanmetric1', avg_m1.avg, n_iter)
+            writer.add_scalar('train/meanmetric2', avg_m2.avg, n_iter)
+
+            for tag, value in model.named_parameters():
+                tag = tag.replace('.', '/')
+                logger.histo_summary(tag+'/grad', value.grad.data.cpu().numpy(), n_iter)
 
             # Plot images and heat maps of GT classes for 4 batches (2 images in each batch)
             if( i % 4 == 0 and i>0 and i<20):
@@ -378,7 +382,7 @@ def train(train_loader, model, criterion, optimizer, epoch, args, writer, vis, u
                     writer.add_image('HeatMap2', heatmapimage_.unsqueeze(0), n_iter)
                     vis.heatmap( heatmapimage_,opts=dict(title=str(epoch)+'_'+str(n_iter)+'_'+str(i)+'_heatmap_'+str(class_names[ind])))
 
-            # Same in Visdom with Title: <epoch>_<iteration>_<batch_index>_image, <epoch>_<iteration>_<batch_index>_heatmap_<class_name>
+                # Same in Visdom with Title: <epoch>_<iteration>_<batch_index>_image, <epoch>_<iteration>_<batch_index>_heatmap_<class_name>
                 vis.image( convert_0_1(input[0]),opts=dict(title=str(epoch)+'_'+str(n_iter)+'_'+str(i)+'_image'))
                 vis.image( convert_0_1(input[2]),opts=dict(title=str(epoch)+'_'+str(n_iter)+'_'+str(i)+'_image'))
 
