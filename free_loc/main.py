@@ -359,7 +359,7 @@ def train(train_loader, model, criterion, optimizer, epoch, args, writer, vis, u
 
             for tag, value in model.named_parameters():
                 tag = tag.replace('.', '/')
-                logger.histo_summary(tag+'/grad', value.grad.data.cpu().numpy(), n_iter)
+                writer.histo_summary(tag+'/grad', value.grad.data.cpu().numpy(), n_iter)
 
             # Plot images and heat maps of GT classes for 4 batches (2 images in each batch)
             if( i % 4 == 0 and i>0 and i<20):
