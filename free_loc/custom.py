@@ -299,6 +299,8 @@ def compute_f1(gt, pred):
         else:
             fscore = sklearn.metrics.f1_score(gt_cls,pred_cls)
         F_score.append(fscore)
+    if(F_score == []):
+        F_score = [0]
     return F_score
 
 class IMDBDataset(data.Dataset):

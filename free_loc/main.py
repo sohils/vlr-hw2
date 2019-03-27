@@ -514,8 +514,6 @@ def metric2(output, target):
     output = output>0.5
     F_score = compute_f1(target, output)
     mF_score = np.mean(F_score)
-    if(np.isnan(mF_score)):
-        pdb.set_trace()
     return [mF_score]
 
 
