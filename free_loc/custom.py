@@ -276,7 +276,7 @@ def compute_ap(gt, pred, valid, average=None):
         gt_cls = gt[:, cid].astype('float32')
         pred_cls = pred[:, cid].astype('float32')
         if(np.count_nonzero(gt_cls) == 0):
-            ap = 1
+            continue
         else:
             # As per PhilK. code:
             # https://github.com/philkr/voc-classification/blob/master/src/train_cls.py
@@ -294,8 +294,8 @@ def compute_f1(gt, pred):
     for cid in range(nclasses):
         gt_cls = gt[:, cid].astype('float32')
         pred_cls = pred[:, cid].astype('float32')
-        if(np.count_nonzero(gt_cls) == 0):
-            fscore = 1
+        if(np.count_nonzero(gt_cls) == 0 or np.count_nonzero(pred_cls)==0):
+            continue
         else:
             fscore = sklearn.metrics.f1_score(gt_cls,pred_cls)
         F_score.append(fscore)
