@@ -107,6 +107,7 @@ class WSDDN(nn.Module):
         # x = F.max_pool2d(x, kernel_size=3, stride=2, dilation=1)
         # Get some output of SPP
         x = self.spp(x, rois)
+        x = .view(x.size()[0], -1)
         x = self.fc6(x)
         x = F.relu(x)
         x = self.fc7(x)

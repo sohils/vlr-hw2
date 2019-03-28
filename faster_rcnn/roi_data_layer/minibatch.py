@@ -55,7 +55,6 @@ def get_weak_minibatch(roidb, num_classes):
                            num_classes)
         #TODO: same as get_minibatch, but we only use the image-level labels
         #So blobs['labels'] should contain a 1x20 binary vector for each image
-        pdb.set_trace()
         # Add to RoIs blob
         rois = _project_im_rois(im_rois, im_scales[im_i])
         batch_ind = im_i * np.ones((rois.shape[0], 1))
