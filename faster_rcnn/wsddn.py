@@ -55,17 +55,26 @@ class WSDDN(nn.Module):
             print(classes)
 
         #TODO: Define the WSDDN model (look at faster_rcnn.py)
-
-
-
-
-
-
-
-
-
-
-
+        self.features = nn.Sequential(
+            nn.Conv2d(3, 64, kernel_size=11, stride=4, padding=2),
+            nn.ReLU(inplace=True),
+            nn.MaxPool2d(kernel_size=3, stride=2, dilation=1, ceil_mode=False),
+            nn.Conv2d(64, 192, kernel_size=5, stride=1, padding=1),
+            nn.ReLU(inplace=True),
+            nn.MaxPool2d(kernel_size=3, stride=2, dilation=1, ceil_mode=False),
+            nn.Conv2d(192, 384, kernel_size=3, stride=1, padding=1),
+            nn.ReLU(inplace=True),
+            nn.Conv2d(384, 256, kernel_size=3, stride=1, padding=1),
+            nn.ReLU(inplace=True),
+            nn.Conv2d(256, 256, kernel_size=3, stride=1, padding=1),
+            nn.ReLU(inplace=True)
+            # nn.MaxPool2d(kernel_size=3, stride=2, dilation=1),
+        )
+        self.spp = RoIPool(pooled_height = 6, pooled_width=6, spatial_scale=1/16.0)
+        self.fc6 = FC(9216,4096)
+        self.fc7 = FC(4096,4096)
+        self.fc8c = FC(4096,20)
+        self.fc8d = FC(4096,20)
 
 
         # loss
@@ -93,9 +102,22 @@ class WSDDN(nn.Module):
         #TODO: Use im_data and rois as input
         # compute cls_prob which are N_roi X 20 scores
         # Checkout faster_rcnn.py for inspiration
-
-
-
+        pdb.set_trace()
+        x = self.features(im_data)
+        # x = F.max_pool2d(x, kernel_size=3, stride=2, dilation=1)
+        # Get some output of SPP
+        x = self.spp(x, rois)
+        x = self.fc6(x)
+        x = F.relu(x)
+        x = self.fc7(x)
+        x = F.relu(x)
+        x_c = self.fc8c(x)
+        x_c = F.softmax(x_c, dim=0)
+        x_d = self.fc8d(x)
+        x_d = F.softmax(x_d, dim=0)
+        x = x_c*x_d
+        cls_prob = x
+        x = x.sum(0)
 
 
 
