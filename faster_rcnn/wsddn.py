@@ -76,6 +76,7 @@ class WSDDN(nn.Module):
         self.fc8c = FC(4096,20)
         self.fc8d = FC(4096,20)
 
+        self.loss = nn.BCELoss()
 
         # loss
         self.cross_entropy = None
@@ -109,22 +110,16 @@ class WSDDN(nn.Module):
         x = self.spp(x, rois)
         x = x.view(x.size()[0], -1)
         x = self.fc6(x)
-        x = F.relu(x)
         x = self.fc7(x)
-        x = F.relu(x)
         x_c = self.fc8c(x)
         x_c = F.softmax(x_c, dim=0)
         x_d = self.fc8d(x)
         x_d = F.softmax(x_d, dim=0)
-        x = x_c*x_d
-        cls_prob = x
+        x_R = x_c*x_d
+        
         x = x.sum(0)
 
-
-
-
-
-
+        cls_prob = x_R * x
         if self.training:
             label_vec = torch.from_numpy(gt_vec).cuda().float()
             label_vec = label_vec.view(self.n_classes, -1)
@@ -142,17 +137,8 @@ class WSDDN(nn.Module):
         #TODO: Compute the appropriate loss using the cls_prob that is the
         #output of forward()
         #Checkout forward() to see how it is called 
-
-
-
-
-
-
-
-
-
-
-
+        cls_prob = cls_prob.sum(0)
+        bceloss = self.loss(label_vec, cls_prob)
         return bceloss
 
     def detect(self, image, rois, thr=0.3):
