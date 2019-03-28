@@ -59,7 +59,7 @@ cfg_file = 'experiments/cfgs/wsddn.yml'
 pretrained_model = 'data/pretrained_model/alexnet_imagenet.npy'
 output_dir = 'models/saved_model'
 visualize = True
-vis_interval = 5000
+vis_interval = 500
 
 start_step = 0
 end_step = 30000
@@ -190,6 +190,14 @@ for step in range(start_step, end_step + 1):
         if use_tensorboard:
             print('Logging to Tensorboard')
             writer.add_scalar('train/loss', train_loss / step_cnt, step)
+            if step % 2000 == 0:
+                for tag, value in net.named_parameters():
+                    tag = tag.replace('.', '/')
+                    writer.add_histogram(tag, value.data.cpu().numpy(), n_iter)
+                    writer.add_histogram(tag+'/grad', value.grad.data.cpu().numpy(), n_iter)
+            if step % 5000 == 0:
+                for ap_index, ap in enumerate(aps):
+                    writer.add_scalar('ap/'+imdb.classes, ap, step)
         if use_visdom:
             print('Logging to visdom')
             vis_plotter.plot('train/loss', 'val', 'Training Loss', step_cnt, train_loss / step_cnt)

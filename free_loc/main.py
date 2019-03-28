@@ -364,6 +364,7 @@ def train(train_loader, model, criterion, optimizer, epoch, args, writer, vis, u
 
         for tag, value in model.named_parameters():
             tag = tag.replace('.', '/')
+            writer.add_histogram(tag, value.data.cpu().numpy(), n_iter)
             writer.add_histogram(tag+'/grad', value.grad.data.cpu().numpy(), n_iter)
 
         # To convert to a coloured CMAP

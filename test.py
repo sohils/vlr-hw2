@@ -20,6 +20,7 @@ from datasets.factory import get_imdb
 from fast_rcnn.config import cfg, cfg_from_file, get_output_dir
 
 import visdom
+import pbd
 # hyper-parameters
 # ------------
 imdb_name = 'voc_2007_test'
@@ -127,6 +128,7 @@ def test_net(name,
 
         # skip j = 0, because it's the background class
         for j in xrange(1, imdb.num_classes + 1):
+            pdb.set_trace()
             newj = j - 1
             inds = np.where(scores[:, newj] > thresh)[0]
             cls_scores = scores[inds, newj]
