@@ -280,7 +280,7 @@ def main():
                 ind = index.cpu().numpy()[0]
                 heatmapimage_ = output[0,ind]
                 heatmapimage_ = display_heatmap(heatmapimage_, input.size()[2:])
-                vis.heatmap( heatmapimage_,opts=dict(title='random_valid_heatmap_'+str(j)+str(class_names[ind])))
+                vis.heatmap( heatmapimage_,opts=dict(title='random_valid_'+str(j)+'_heatmap_'+str(class_names[ind])))
         break
 
 
@@ -394,15 +394,15 @@ def train(train_loader, model, criterion, optimizer, epoch, args, writer, vis, u
                     heatmapimage_color = transforms.ToTensor()(cmap_converter(heatmapimage_.cpu().detach().numpy())[:,:,:3]).float()
                     heatmapimages_color.append(heatmapimage_color)
                     if(epoch == 0 or epoch == (args.epochs-1)):
-                        vis.heatmap( heatmapimage_,opts=dict(title=str(epoch)+'_'+str(n_iter)+'_'+str(i)+'_heatmap_image_'+str(image_index)+'_'+str(class_names[ind])))
+                        vis.heatmap( heatmapimage_.flip(0),opts=dict(title=str(epoch)+'_'+str(n_iter)+'_'+str(i)+'_image_'+str(image_index)+'_heatmap_'+str(class_names[ind])))
                 heatmapimages_color = torch.stack(heatmapimages_color)
                 grid_images = torchvision.utils.make_grid(heatmapimages_color)
                 writer.add_image('HeatMap-Image'+str(image_index), grid_images, n_iter)
 
             # Same in Visdom with Title: <epoch>_<iteration>_<batch_index>_image, <epoch>_<iteration>_<batch_index>_heatmap_<class_name>
             if(epoch ==0 or epoch==(args.epochs-1)):
-                vis.image( convert_0_1(input[0]),opts=dict(title=str(epoch)+'_'+str(n_iter)+'_'+str(i)+'_image'))
-                vis.image( convert_0_1(input[1]),opts=dict(title=str(epoch)+'_'+str(n_iter)+'_'+str(i)+'_image'))
+                vis.image( convert_0_1(input[0]),opts=dict(title=str(epoch)+'_'+str(n_iter)+'_'+str(i)+'_image_'+str(0)))
+                vis.image( convert_0_1(input[1]),opts=dict(title=str(epoch)+'_'+str(n_iter)+'_'+str(i)+'_image_'+str(1)))
 
             # End of train()
 

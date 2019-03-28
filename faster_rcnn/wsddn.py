@@ -136,8 +136,7 @@ class WSDDN(nn.Module):
         #Checkout forward() to see how it is called 
         cls_prob = cls_prob.sum(0)
         loss = nn.BCELoss()
-        pdb.set_trace()
-        bceloss = loss(cls_prob,label_vec)
+        bceloss = loss(cls_prob.squeeze(),label_vec.squeeze())
         return bceloss
 
     def detect(self, image, rois, thr=0.3):
