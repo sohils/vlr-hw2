@@ -309,7 +309,10 @@ def train(train_loader, model, criterion, optimizer, epoch, args, writer, vis, u
         # TODO: Perform any necessary functions on the output
         # TODO: Compute loss using ``criterion``
         output = model(input)
-        imoutput = F.max_pool2d(output, kernel_size=output.size()[2:])
+        if(args.arch == 'localizer_alexnet_robust'):
+            imoutput = F.avg_pool2d(output, kernel_size=output.size()[2:])
+        else:
+            imoutput = F.max_pool2d(output, kernel_size=output.size()[2:])
         imoutput = imoutput.squeeze()
         imoutput = torch.sigmoid(imoutput)
         loss = criterion(imoutput, target)
