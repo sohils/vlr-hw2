@@ -385,13 +385,13 @@ def train(train_loader, model, criterion, optimizer, epoch, args, writer, vis, u
 
             # HeatMap for second one
             for image_index in range(2):
-                # pdb.set_trace()
+                pdb.set_trace()
                 heatmapimages_color = torch.tensor([])
                 for index in target[image_index].nonzero():
                     ind = index.cpu().numpy()[0]
                     heatmapimage_ = output[image_index,ind]
                     heatmapimage_ = display_heatmap(heatmapimage_, input.size()[2:])
-                    heatmapimage_color = transforms.ToTensor()(cmap_converter(heatmapimage_.cpu().detach().numpy())).float()
+                    heatmapimage_color = transforms.ToTensor()(cmap_converter(heatmapimage_.cpu().detach().numpy())[:,:,:3]).float()
                     heatmapimages_color = torch.cat((heatmapimages_color,heatmapimage_color))
                     if(epoch == 0 or epoch == (args.epochs-1)):
                         vis.heatmap( heatmapimage_,opts=dict(title=str(epoch)+'_'+str(n_iter)+'_'+str(i)+'_heatmap_image_'+str(image_index)+'_'+str(class_names[ind])))
