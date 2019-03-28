@@ -26,7 +26,7 @@ from tensorboardX import SummaryWriter
 from datasets.factory import get_imdb
 from custom import *
 
-import matplotlib as plt
+import matplotlib.pyplot as plt
 
 model_names = sorted(name for name in models.__dict__
                      if name.islower() and not name.startswith("__")
