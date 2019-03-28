@@ -402,7 +402,7 @@ def train(train_loader, model, criterion, optimizer, epoch, args, writer, vis, u
             # Same in Visdom with Title: <epoch>_<iteration>_<batch_index>_image, <epoch>_<iteration>_<batch_index>_heatmap_<class_name>
             if(epoch ==0 or epoch==(args.epochs-1)):
                 vis.image( convert_0_1(input[0]),opts=dict(title=str(epoch)+'_'+str(n_iter)+'_'+str(i)+'_image'))
-                vis.image( convert_0_1(input[2]),opts=dict(title=str(epoch)+'_'+str(n_iter)+'_'+str(i)+'_image'))
+                vis.image( convert_0_1(input[1]),opts=dict(title=str(epoch)+'_'+str(n_iter)+'_'+str(i)+'_image'))
 
             # End of train()
 

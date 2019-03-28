@@ -26,6 +26,22 @@ try:
 except ImportError:
     cprint = None
 
+class VisdomLinePlot(object):
+    """Plots to Visdom"""
+    def __init__(self, env_name='main'):
+        self.viz = Visdom()
+        self.env = env_name
+        self.plots = {}
+    def plot(self, var_name, split_name, title_name, x, y):
+        if var_name not in self.plots:
+            self.plots[var_name] = self.viz.line(X=np.array([x,x]), Y=np.array([y,y]), env=self.env, opts=dict(
+                legend=[split_name],
+                title=title_name,
+                xlabel='Epochs',
+                ylabel=var_name
+            ))
+        else:
+            self.viz.line(X=np.array([x]), Y=np.array([y]), env=self.env, win=self.plots[var_name], name=split_name, update = 'append')
 
 def log_print(text, color=None, on_color=None, attrs=None):
     if cprint is not None:
@@ -118,6 +134,8 @@ net.train()
 if not os.path.exists(output_dir):
     os.makedirs(output_dir)
 
+vis_plotter = VisdomLinePlot()
+
 # training
 train_loss = 0
 tp, tf, fg, bg = 0., 0., 0, 0
@@ -171,8 +189,11 @@ for step in range(start_step, end_step + 1):
         #TODO: Create required visualizations
         if use_tensorboard:
             print('Logging to Tensorboard')
+            writer.add_scalar('train/loss', train_loss / step_cnt, step)
         if use_visdom:
             print('Logging to visdom')
+            vis_plotter.plot('train/loss', 'val', 'Training Loss', step_cnt, train_loss / step_cnt)
+
 
 
 
