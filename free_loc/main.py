@@ -384,9 +384,10 @@ def train(train_loader, model, criterion, optimizer, epoch, args, writer, vis, u
 
             # HeatMap for second one
             for image_index in range(2):
+                pdb.set_trace()
                 heatmapimages_color = torch.tensor([])
-                for index in target[image_index].nonzero().squeeze():
-                    ind = index.cpu().numpy()
+                for index in target[image_index].nonzero():
+                    ind = index.cpu().numpy()[0]
                     heatmapimage_ = output[image_index,ind]
                     heatmapimage_ = display_heatmap(heatmapimage_, input.size()[2:])
                     heatmapimage_color = transforms.ToTensor(cmap_converter(heatmapimage_))
