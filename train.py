@@ -122,14 +122,10 @@ net.train()
 
 # TODO: Create optimizer for network parameters from conv2 onwards
 # (do not optimize conv1)
-
-
-
-
-
-
-
-
+pdb.set_trace()
+optimizer = torch.optim.SGD(net.parameters(), lr,
+                                momentum=momentum,
+                                weight_decay=weight_decay)
 
 if not os.path.exists(output_dir):
     os.makedirs(output_dir)
@@ -174,12 +170,17 @@ for step in range(start_step, end_step + 1):
         re_cnt = True
 
     #TODO: evaluate the model every N iterations (N defined in handout)
-
-
-
-
-
-
+    if step % 500 == 0:
+        imdb_name = 'voc_2007_test'
+        imdb = get_imdb(imdb_name)
+        imdb.competition_mode(on=True)
+        net.eval()
+        max_per_image = 300
+        thresh = 0.0001
+        # evaluation
+        aps = test_net(
+            "test_no_one_cares", net, imdb, max_per_image, thresh=thresh, visualize=False)
+        net.train()
 
     #TODO: Perform all visualizations here
     #You can define other interval variable if you want (this is just an

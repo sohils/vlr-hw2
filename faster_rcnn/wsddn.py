@@ -70,7 +70,7 @@ class WSDDN(nn.Module):
             nn.ReLU(inplace=True)
             # nn.MaxPool2d(kernel_size=3, stride=2, dilation=1),
         )
-        self.spp = RoIPool(pooled_height = 6, pooled_width=6, spatial_scale=1/16.0)
+        self.spp = RoIPool(pooled_height = 6, pooled_width = 6, spatial_scale=1/16.0)
         self.fc6 = FC(9216,4096)
         self.fc7 = FC(4096,4096)
         self.fc8c = FC(4096,20)
