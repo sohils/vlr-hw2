@@ -61,7 +61,8 @@ def get_weak_minibatch(roidb, num_classes):
         batch_ind = im_i * np.ones((rois.shape[0], 1))
         rois_blob_this_image = np.hstack((batch_ind, rois))
         rois_blob = np.vstack((rois_blob, rois_blob_this_image))
-        
+
+        labels = roidb[im_i]['gt_vec'].squeeze()
         labels_blob = np.hstack((labels_blob, labels))
 
     blobs['rois'] = rois_blob

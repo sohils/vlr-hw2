@@ -362,23 +362,26 @@ def train(train_loader, model, criterion, optimizer, epoch, args, writer, vis, u
 
         # Plot images and heat maps of GT classes for 4 batches (2 images in each batch)
         if( i % 4 == 0 and i>0 and i<20):
-            writer.add_image('Image1', unnormalize(input[0]), n_iter)
-            writer.add_image('Image2', unnormalize(input[2]), n_iter)
+            unnormalized_input = input[0:2]
+            for i in range(unnormalized_input.shape[0]):
+                unnormalized_input[i] = unnormalize(input[i])
+            grid_images = torchvision.utils.make_grid(unnormalized_input)
+            writer.add_image('Images', grid_images, n_iter)
 
             # HeatMap for first one
-            for index in target[0].nonzero():
-                ind = index.cpu().numpy()[0]
+            for index in target[0].nonzero().squeeze():
+                ind = index.cpu().numpy()
                 heatmapimage_ = output[0,ind]
                 heatmapimage_ = display_heatmap(heatmapimage_, input.size()[2:])
-                writer.add_image('HeatMap1', heatmapimage_.unsqueeze(0), n_iter)
+                writer.add_image('HeatMap-Image1', heatmapimage_.unsqueeze(0), n_iter)
                 vis.heatmap( heatmapimage_,opts=dict(title=str(epoch)+'_'+str(n_iter)+'_'+str(i)+'_heatmap_'+str(class_names[ind])))
 
             # HeatMap for second one
-            for index in target[2].nonzero():
+            for index in target[1].nonzero():
                 ind = index.cpu().numpy()[0]
-                heatmapimage_ = output[2,ind]
+                heatmapimage_ = output[1,ind]
                 heatmapimage_ = display_heatmap(heatmapimage_, input.size()[2:])
-                writer.add_image('HeatMap2', heatmapimage_.unsqueeze(0), n_iter)
+                writer.add_image('HeatMap-Image2', heatmapimage_.unsqueeze(0), n_iter)
                 vis.heatmap( heatmapimage_,opts=dict(title=str(epoch)+'_'+str(n_iter)+'_'+str(i)+'_heatmap_'+str(class_names[ind])))
 
             # Same in Visdom with Title: <epoch>_<iteration>_<batch_index>_image, <epoch>_<iteration>_<batch_index>_heatmap_<class_name>
