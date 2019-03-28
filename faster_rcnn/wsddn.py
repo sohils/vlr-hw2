@@ -136,7 +136,7 @@ class WSDDN(nn.Module):
         #output of forward()
         #Checkout forward() to see how it is called 
         cls_prob = cls_prob.sum(0)
-        bceloss = self.loss(label_vec, cls_prob)
+        bceloss = self.loss(cls_prob,label_vec)
         return bceloss
 
     def detect(self, image, rois, thr=0.3):

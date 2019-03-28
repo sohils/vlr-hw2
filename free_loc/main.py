@@ -26,6 +26,8 @@ from tensorboardX import SummaryWriter
 from datasets.factory import get_imdb
 from custom import *
 
+import matplotlib as plt
+
 model_names = sorted(name for name in models.__dict__
                      if name.islower() and not name.startswith("__")
                      and callable(models.__dict__[name]))
@@ -360,6 +362,9 @@ def train(train_loader, model, criterion, optimizer, epoch, args, writer, vis, u
             tag = tag.replace('.', '/')
             writer.add_histogram(tag+'/grad', value.grad.data.cpu().numpy(), n_iter)
 
+        # To convert to a coloured CMAP
+        cmap_converter = plt.get_cmap('inferno')
+
         # Plot images and heat maps of GT classes for 4 batches (2 images in each batch)
         if( i % 4 == 0 and i>0 and i<20):
             unnormalized_input = input[0:2]
@@ -368,25 +373,32 @@ def train(train_loader, model, criterion, optimizer, epoch, args, writer, vis, u
             grid_images = torchvision.utils.make_grid(unnormalized_input)
             writer.add_image('Images', grid_images, n_iter)
 
-            # HeatMap for first one
-            for index in target[0].nonzero().squeeze():
-                ind = index.cpu().numpy()
-                heatmapimage_ = output[0,ind]
-                heatmapimage_ = display_heatmap(heatmapimage_, input.size()[2:])
-                writer.add_image('HeatMap-Image1', heatmapimage_.unsqueeze(0), n_iter)
-                vis.heatmap( heatmapimage_,opts=dict(title=str(epoch)+'_'+str(n_iter)+'_'+str(i)+'_heatmap_'+str(class_names[ind])))
+            # # HeatMap for first one
+            # for index in target[0].nonzero().squeeze():
+            #     ind = index.cpu().numpy()
+            #     heatmapimage_ = output[0,ind]
+            #     heatmapimage_ = display_heatmap(heatmapimage_, input.size()[2:])
+            #     writer.add_image('HeatMap-Image1', heatmapimage_.unsqueeze(0), n_iter)
+            #     vis.heatmap( heatmapimage_,opts=dict(title=str(epoch)+'_'+str(n_iter)+'_'+str(i)+'_heatmap_'+str(class_names[ind])))
 
             # HeatMap for second one
-            for index in target[1].nonzero():
-                ind = index.cpu().numpy()[0]
-                heatmapimage_ = output[1,ind]
-                heatmapimage_ = display_heatmap(heatmapimage_, input.size()[2:])
-                writer.add_image('HeatMap-Image2', heatmapimage_.unsqueeze(0), n_iter)
-                vis.heatmap( heatmapimage_,opts=dict(title=str(epoch)+'_'+str(n_iter)+'_'+str(i)+'_heatmap_'+str(class_names[ind])))
+            for image_index in range(2):
+                heatmapimages_color = torch.tensor([])
+                for index in target[image_index].nonzero().squeeze():
+                    ind = index.cpu().numpy()
+                    heatmapimage_ = output[image_index,ind]
+                    heatmapimage_ = display_heatmap(heatmapimage_, input.size()[2:])
+                    heatmapimage_color = transforms.ToTensor(cmap_converter(heatmapimage_))
+                    heatmapimages_color = torch.cat((heatmapimages_color,heatmapimage_color))
+                    if(epoch == 0 or epoch == (args.epochs-1)):
+                        vis.heatmap( heatmapimage_,opts=dict(title=str(epoch)+'_'+str(n_iter)+'_'+str(i)+'_heatmap_image_'+str(image_index)+'_'+str(class_names[ind])))
+                grid_images = torchvision.utils.make_grid(heatmapimages_color)
+                writer.add_image('HeatMap-Image'+str(image_index), grid_images, n_iter)
 
             # Same in Visdom with Title: <epoch>_<iteration>_<batch_index>_image, <epoch>_<iteration>_<batch_index>_heatmap_<class_name>
-            vis.image( convert_0_1(input[0]),opts=dict(title=str(epoch)+'_'+str(n_iter)+'_'+str(i)+'_image'))
-            vis.image( convert_0_1(input[2]),opts=dict(title=str(epoch)+'_'+str(n_iter)+'_'+str(i)+'_image'))
+            if(epoch ==0 or epoch==(args.epochs-1)):
+                vis.image( convert_0_1(input[0]),opts=dict(title=str(epoch)+'_'+str(n_iter)+'_'+str(i)+'_image'))
+                vis.image( convert_0_1(input[2]),opts=dict(title=str(epoch)+'_'+str(n_iter)+'_'+str(i)+'_image'))
 
             # End of train()
 
