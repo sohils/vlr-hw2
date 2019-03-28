@@ -116,10 +116,8 @@ class WSDDN(nn.Module):
         x_d = self.fc8d(x)
         x_d = F.softmax(x_d, dim=0)
         x_R = x_c*x_d
-        
-        x = x.sum(0)
+        cls_prob = x_R
 
-        cls_prob = x_R * x
         if self.training:
             label_vec = torch.from_numpy(gt_vec).cuda().float()
             label_vec = label_vec.view(self.n_classes, -1)
