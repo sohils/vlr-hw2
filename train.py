@@ -19,7 +19,9 @@ from roi_data_layer.layer import RoIDataLayer
 from datasets.factory import get_imdb
 from fast_rcnn.config import cfg, cfg_from_file
 import gc
+
 import pdb
+from visdom import Visdom
 
 try:
     from termcolor import cprint
@@ -123,9 +125,7 @@ net.train()
 # TODO: Create optimizer for network parameters from conv2 onwards
 # (do not optimize conv1)
 pdb.set_trace()
-optimizer = torch.optim.SGD(list(net.parameters())[2:], lr,
-                                momentum=momentum,
-                                weight_decay=weight_decay)
+optimizer = torch.optim.SGD(list(net.parameters())[2:], lr, momentum=momentum, weight_decay=weight_decay)
 
 if not os.path.exists(output_dir):
     os.makedirs(output_dir)
