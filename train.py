@@ -124,7 +124,6 @@ net.train()
 
 # TODO: Create optimizer for network parameters from conv2 onwards
 # (do not optimize conv1)
-pdb.set_trace()
 optimizer = torch.optim.SGD(list(net.parameters())[2:], lr, momentum=momentum, weight_decay=weight_decay)
 
 if not os.path.exists(output_dir):

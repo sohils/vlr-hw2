@@ -103,7 +103,6 @@ class WSDDN(nn.Module):
         #TODO: Use im_data and rois as input
         # compute cls_prob which are N_roi X 20 scores
         # Checkout faster_rcnn.py for inspiration
-        pdb.set_trace()
         x = self.features(im_data)
         # x = F.max_pool2d(x, kernel_size=3, stride=2, dilation=1)
         # Get some output of SPP
@@ -136,6 +135,7 @@ class WSDDN(nn.Module):
         #output of forward()
         #Checkout forward() to see how it is called 
         cls_prob = cls_prob.sum(0)
+        pdb.set_trace()
         bceloss = self.loss(cls_prob,label_vec)
         return bceloss
 
