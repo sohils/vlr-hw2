@@ -173,7 +173,7 @@ for step in range(start_step, end_step + 1):
         re_cnt = True
 
     #TODO: evaluate the model every N iterations (N defined in handout)
-    if ((not step==0) or (step % 5000 == 0)):
+    if (step % 5000 == 0):
         imdb_name = 'voc_2007_test'
         imdb = get_imdb(imdb_name)
         imdb.competition_mode(on=True)
@@ -205,7 +205,7 @@ for step in range(start_step, end_step + 1):
         if use_visdom:
             print('Logging to visdom')
             vis_plotter.plot('train/loss', 'val', 'Training Loss', step, loss.item())
-            if (not step==0) and (step % 5000 == 0):
+            if (step % 5000 == 0):
                 writer.add_scalar('mAP', 'val', 'mAP' ,step, np.mean(aps))
 
 
