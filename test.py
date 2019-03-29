@@ -20,7 +20,7 @@ from datasets.factory import get_imdb
 from fast_rcnn.config import cfg, cfg_from_file, get_output_dir
 
 import visdom
-import pbd
+import pdb
 # hyper-parameters
 # ------------
 imdb_name = 'voc_2007_test'
