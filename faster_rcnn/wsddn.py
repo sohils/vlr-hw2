@@ -10,7 +10,7 @@ from fast_rcnn.nms_wrapper import nms
 from fast_rcnn.bbox_transform import bbox_transform_inv, clip_boxes
 
 import network
-from network import Conv2d, FC
+from network import Conv2d, FC, FC_noRelu
 #from roi_pooling.modules.roi_pool import RoIPool
 from roi_pooling_new.modules.roi_pool import _RoIPooling as RoIPool
 from vgg16 import VGG16
