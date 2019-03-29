@@ -119,6 +119,7 @@ class WSDDN(nn.Module):
         x_R = x_c*x_d
         cls_prob = x_R
         cls_prob = cls_prob.sum(0)
+        cls_prob = cls_prob.view(1,-1)
 
         if self.training:
             label_vec = torch.from_numpy(gt_vec).cuda().float()
