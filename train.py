@@ -132,6 +132,7 @@ if not os.path.exists(output_dir):
     os.makedirs(output_dir)
 
 vis_plotter = VisdomLinePlot()
+writer = SummaryWriter()
 
 # training
 train_loss = 0
@@ -179,7 +180,7 @@ for step in range(start_step, end_step + 1):
         max_per_image = 300
         thresh = 0.0001
         # evaluation
-        aps = testing.test_net("test_no_one_cares", net, imdb, max_per_image, thresh=thresh, visualize=False)
+        aps = testing.test_net("test_no_one_cares", net, imdb, max_per_image, thresh=thresh, visualize=False, tbx_writer=writer)
         net.train()
 
     #TODO: Perform all visualizations here

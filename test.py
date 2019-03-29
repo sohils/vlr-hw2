@@ -45,7 +45,7 @@ if rand_seed is not None:
 cfg_from_file(cfg_file)
 
 
-def vis_detections(im, class_name, dets, thresh=0.8):
+def vis_detections(im, class_name, dets, thresh=0.1):
     """Visual debugging of detections."""
     for i in range(np.minimum(10, dets.shape[0])):
         bbox = tuple(int(np.round(x)) for x in dets[i, :4])
@@ -97,7 +97,8 @@ def test_net(name,
              thresh=0.05,
              visualize=False,
              logger=None,
-             step=None):
+             step=None,
+             tbx_writer=None):
     """Test a Fast R-CNN network on an image database."""
     num_images = len(imdb.image_index)
     # all detections are collected into:
@@ -159,11 +160,8 @@ def test_net(name,
             # TODO: Visualize here using tensorboard
             # TODO: use the logger that is an argument to this function
             print('Visualizing')
-
-
-
-
-
+            if(not tbx_writer == None):
+                tbx_writer.add_image("boudingbox_images",im2show,step)
 
     with open(det_file, 'wb') as f:
         cPickle.dump(all_boxes, f, cPickle.HIGHEST_PROTOCOL)
