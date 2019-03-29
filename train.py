@@ -34,7 +34,7 @@ except ImportError:
 class VisdomLinePlot(object):
     """Plots to Visdom"""
     def __init__(self, env_name='main'):
-        self.viz = Visdom()
+        self.viz = Visdom(log_to_filename='q2')
         self.env = env_name
         self.plots = {}
     def plot(self, var_name, split_name, title_name, x, y):
