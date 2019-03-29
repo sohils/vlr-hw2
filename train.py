@@ -173,7 +173,7 @@ for step in range(start_step, end_step + 1):
         re_cnt = True
 
     #TODO: evaluate the model every N iterations (N defined in handout)
-    if step % 5000 == 0:
+    if ((not step==0) and (step % 5000 == 0)):
         imdb_name = 'voc_2007_test'
         imdb = get_imdb(imdb_name)
         imdb.competition_mode(on=True)

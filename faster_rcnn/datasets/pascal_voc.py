@@ -249,10 +249,13 @@ class pascal_voc(imdb):
     filename = self._get_comp_id() + '_det_' + self._image_set + '_{:s}.txt'
     path = os.path.join(
       self._devkit_path,
-      # 'results',
+      'results',
       'VOC' + self._year,
       'Main',
       filename)
+    temp = os.path.join(self._devkit_path, 'results', 'VOC' + self._year, 'Main')
+    if not os.path.exists(temp):
+      os.makedirs(temp)
     return path
 
   def _write_voc_results_file(self, all_boxes):
