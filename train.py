@@ -198,7 +198,7 @@ for step in range(start_step, end_step + 1):
                     tag = tag.replace('.', '/')
                     writer.add_histogram(tag, value.data.cpu().numpy(), step)
                     writer.add_histogram(tag+'/grad', value.grad.data.cpu().numpy(), step)
-            if step % 5000 == 0:
+            if (not step==0) and (step % 5000 == 0):
                 writer.add_scalar('mAP', np.mean(aps), step)
                 for ap_index, ap in enumerate(aps):
                     writer.add_scalar('ap/'+imdb.classes, ap, step)
