@@ -72,7 +72,7 @@ lr_decay = 1. / 10
 rand_seed = 1024
 _DEBUG = False
 use_tensorboard = True
-use_visdom = False
+use_visdom = True
 log_grads = False
 
 remove_all_log = False  # remove all historical experiments in TensorBoard
