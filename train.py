@@ -22,6 +22,7 @@ import gc
 
 import pdb
 from visdom import Visdom
+from tensorboardX import SummaryWriter
 
 import test as testing
 
