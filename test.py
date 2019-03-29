@@ -127,9 +127,9 @@ def test_net(name,
             im2show = np.copy(im)
 
         # skip j = 0, because it's the background class
-        for j in xrange(1, imdb.num_classes + 1):
+        for j in xrange(0, imdb.num_classes):
             pdb.set_trace()
-            newj = j - 1
+            newj = j
             inds = np.where(scores[:, newj] > thresh)[0]
             cls_scores = scores[inds, newj]
             cls_boxes = boxes[inds, newj * 4:(newj + 1) * 4]
