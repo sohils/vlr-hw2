@@ -192,7 +192,7 @@ for step in range(start_step, end_step + 1):
         #TODO: Create required visualizations
         if use_tensorboard:
             print('Logging to Tensorboard')
-            writer.add_scalar('train/loss', train_loss / step_cnt, step)
+            writer.add_scalar('train/loss', loss.item(), step)
             if step % 2000 == 0:
                 for tag, value in net.named_parameters():
                     tag = tag.replace('.', '/')
@@ -204,7 +204,9 @@ for step in range(start_step, end_step + 1):
                     writer.add_scalar('ap/'+str(imdb.classes[ap_index]), ap, step)
         if use_visdom:
             print('Logging to visdom')
-            vis_plotter.plot('train/loss', 'val', 'Training Loss', step_cnt, train_loss / step_cnt)
+            vis_plotter.plot('train/loss', 'val', 'Training Loss', step, loss.item())
+            if (not step==0) and (step % 5000 == 0):
+                writer.add_scalar('mAP', 'val', 'mAP' ,step, np.mean(aps))
 
 
 
