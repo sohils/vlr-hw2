@@ -159,7 +159,10 @@ def test_net(name,
             # TODO: use the logger that is an argument to this function
             print('Visualizing')
             if(not logger == None):
-                logger.add_image("Step_"+str(step), im2show, step)
+                b = im2show[:,:,0]
+                im2show[:,:,0] = im2show[:,:,2]
+                im2show[:,:,2] = b
+                logger.add_image("Step_"+str(step), np.transpose(im2show,[2,0,1]), step)
 
     with open(det_file, 'wb') as f:
         cPickle.dump(all_boxes, f, cPickle.HIGHEST_PROTOCOL)
