@@ -127,9 +127,8 @@ def test_net(name,
             im2show = np.copy(im)
 
         # skip j = 0, because it's the background class
-        for j in xrange(0, imdb.num_classes):
-            pdb.set_trace()
-            newj = j
+        for j in xrange(1, imdb.num_classes+1):
+            newj = j - 1
             inds = np.where(scores[:, newj] > thresh)[0]
             cls_scores = scores[inds, newj]
             cls_boxes = boxes[inds, newj * 4:(newj + 1) * 4]
@@ -138,7 +137,7 @@ def test_net(name,
             keep = nms(cls_dets, cfg.TEST.NMS)
             cls_dets = cls_dets[keep, :]
             if visualize:
-                im2show = vis_detections(im2show, imdb.classes[j], cls_dets)
+                im2show = vis_detections(im2show, imdb.classes[newj], cls_dets)
             all_boxes[j][i] = cls_dets
 
         # Limit to max_per_image detections *over all classes*
