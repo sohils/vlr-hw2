@@ -421,9 +421,9 @@ def validate(val_loader, model, criterion, epoch, writer, vis, unnormalize):
         # TODO: Compute loss using ``criterion``
         imoutput = model(input)
         if(args.arch == 'localizer_alexnet_robust'):
-            imoutput = F.avg_pool2d(imoutput, kernel_size=output.size()[2:])
+            imoutput = F.avg_pool2d(imoutput, kernel_size=imoutput.size()[2:])
         else:
-            imoutput = F.max_pool2d(imoutput, kernel_size=output.size()[2:])
+            imoutput = F.max_pool2d(imoutput, kernel_size=imoutput.size()[2:])
         imoutput = imoutput.squeeze()
         imoutput = torch.sigmoid(imoutput)
         loss = criterion(imoutput, target)
