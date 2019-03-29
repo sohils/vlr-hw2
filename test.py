@@ -58,6 +58,7 @@ def vis_detections(im, class_name, dets, thresh=0.1):
                 cv2.FONT_HERSHEY_PLAIN,
                 1.0, (0, 0, 255),
                 thickness=1)
+    im = cv2.cvtColor(im, cv2.COLOR_BGR2RGB)
     return im
 
 
