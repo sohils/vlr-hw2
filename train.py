@@ -181,7 +181,7 @@ for step in range(start_step, end_step + 1):
         max_per_image = 300
         thresh = 0.0001
         # evaluation
-        aps = testing.test_net("test_no_one_cares", net, imdb, max_per_image, thresh=thresh, visualize=True, logger=writer)
+        aps = testing.test_net("test_no_one_cares", net, imdb, max_per_image, step=step, thresh=thresh, visualize=True, logger=writer)
         net.train()
 
     #TODO: Perform all visualizations here
