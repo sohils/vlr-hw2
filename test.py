@@ -95,7 +95,7 @@ def test_net(name,
              net,
              imdb,
              max_per_image=300,
-             thresh=0.05,
+             thresh=0.0001,
              visualize=False,
              logger=None,
              step=None):
