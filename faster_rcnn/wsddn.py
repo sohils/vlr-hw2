@@ -135,7 +135,7 @@ class WSDDN(nn.Module):
         #output of forward()
         #Checkout forward() to see how it is called 
         cls_prob = cls_prob.sum(0)
-        loss = nn.BCELoss()
+        loss = nn.BCELoss(reduction='sum')
         bceloss = loss(cls_prob.squeeze(),label_vec.squeeze())
         return bceloss
 
