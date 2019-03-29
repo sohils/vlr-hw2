@@ -78,6 +78,8 @@ class WSDDN(nn.Module):
 
         self.loss = nn.BCELoss()
 
+        self.training = training
+
         # loss
         self.cross_entropy = None
 
@@ -116,6 +118,7 @@ class WSDDN(nn.Module):
         x_d = F.softmax(x_d, dim=0)
         x_R = x_c*x_d
         cls_prob = x_R
+        cls_prob = cls_prob.sum(0)
 
         if self.training:
             label_vec = torch.from_numpy(gt_vec).cuda().float()
@@ -134,7 +137,7 @@ class WSDDN(nn.Module):
         #TODO: Compute the appropriate loss using the cls_prob that is the
         #output of forward()
         #Checkout forward() to see how it is called 
-        cls_prob = cls_prob.sum(0)
+        
         loss = nn.BCELoss()
         bceloss = loss(cls_prob.squeeze(),label_vec.squeeze())
         return bceloss

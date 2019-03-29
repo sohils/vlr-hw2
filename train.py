@@ -177,12 +177,17 @@ for step in range(start_step, end_step + 1):
         imdb_name = 'voc_2007_test'
         imdb = get_imdb(imdb_name)
         imdb.competition_mode(on=True)
+        
         net.eval()
+        net.training=False
+        
         max_per_image = 300
         thresh = 0.0001
         # evaluation
         aps = testing.test_net("test_no_one_cares", net, imdb, max_per_image, step=step, thresh=thresh, visualize=True, logger=writer)
+        
         net.train()
+        net.training=True
 
     #TODO: Perform all visualizations here
     #You can define other interval variable if you want (this is just an
@@ -206,7 +211,7 @@ for step in range(start_step, end_step + 1):
             print('Logging to visdom')
             vis_plotter.plot('train/loss', 'val', 'Training Loss', step, loss.item())
             if (step % 5000 == 0):
-                writer.add_scalar('mAP', 'val', 'mAP' ,step, np.mean(aps))
+                vis_plotter.plot('mAP', 'val', 'mAP' ,step, np.mean(aps))
 
 
 
