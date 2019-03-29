@@ -188,7 +188,7 @@ for step in range(start_step, end_step + 1):
     #You can define other interval variable if you want (this is just an
     #example)
     #The intervals for different things are defined in the handout
-    if visualize and step % vis_interval == 0:
+    if (visualize and ((step % vis_interval) == 0)):
         #TODO: Create required visualizations
         if use_tensorboard:
             print('Logging to Tensorboard')
