@@ -196,8 +196,8 @@ for step in range(start_step, end_step + 1):
             if step % 2000 == 0:
                 for tag, value in net.named_parameters():
                     tag = tag.replace('.', '/')
-                    writer.add_histogram(tag, value.data.cpu().numpy(), n_iter)
-                    writer.add_histogram(tag+'/grad', value.grad.data.cpu().numpy(), n_iter)
+                    writer.add_histogram(tag, value.data.cpu().numpy(), step)
+                    writer.add_histogram(tag+'/grad', value.grad.data.cpu().numpy(), step)
             if step % 5000 == 0:
                 writer.add_scalar('mAP', np.mean(ap), step)
                 for ap_index, ap in enumerate(aps):
