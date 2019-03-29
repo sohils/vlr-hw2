@@ -233,14 +233,13 @@ def main():
         validate(val_loader, model, criterion)
         return
 
-    writer = SummaryWriter()
-
     # TODO: Create loggers for visdom and tboard
     # TODO: You can pass the logger objects to train(), make appropriate
     # modifications to train()
     if args.vis:
         import visdom
         vis = visdom.Visdom()
+    writer = SummaryWriter()
 
 
     for epoch in range(args.start_epoch, args.epochs):
@@ -378,14 +377,6 @@ def train(train_loader, model, criterion, optimizer, epoch, args, writer, vis, u
             grid_images = torchvision.utils.make_grid(unnormalized_input)
             writer.add_image('Images', grid_images, n_iter)
 
-            # # HeatMap for first one
-            # for index in target[0].nonzero().squeeze():
-            #     ind = index.cpu().numpy()
-            #     heatmapimage_ = output[0,ind]
-            #     heatmapimage_ = display_heatmap(heatmapimage_, input.size()[2:])
-            #     writer.add_image('HeatMap-Image1', heatmapimage_.unsqueeze(0), n_iter)
-            #     vis.heatmap( heatmapimage_,opts=dict(title=str(epoch)+'_'+str(n_iter)+'_'+str(i)+'_heatmap_'+str(class_names[ind])))
-
             # HeatMap for second one
             for image_index in range(2):
                 # pdb.set_trace()
@@ -429,7 +420,10 @@ def validate(val_loader, model, criterion, epoch, writer, vis, unnormalize):
         # TODO: Perform any necessary functions on the output
         # TODO: Compute loss using ``criterion``
         imoutput = model(input)
-        imoutput = F.max_pool2d(imoutput, kernel_size=imoutput.size()[2:])
+        if(args.arch == 'localizer_alexnet_robust'):
+            imoutput = F.avg_pool2d(imoutput, kernel_size=output.size()[2:])
+        else:
+            imoutput = F.max_pool2d(imoutput, kernel_size=output.size()[2:])
         imoutput = imoutput.squeeze()
         imoutput = torch.sigmoid(imoutput)
         loss = criterion(imoutput, target)

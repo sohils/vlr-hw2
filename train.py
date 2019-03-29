@@ -71,7 +71,7 @@ lr_decay = 1. / 10
 
 rand_seed = 1024
 _DEBUG = False
-use_tensorboard = False
+use_tensorboard = True
 use_visdom = False
 log_grads = False
 

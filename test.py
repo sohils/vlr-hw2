@@ -45,7 +45,7 @@ if rand_seed is not None:
 cfg_from_file(cfg_file)
 
 
-def vis_detections(im, class_name, dets, thresh=0.1):
+def vis_detections(im, class_name, dets, thresh=0.001):
     """Visual debugging of detections."""
     for i in range(np.minimum(10, dets.shape[0])):
         bbox = tuple(int(np.round(x)) for x in dets[i, :4])
@@ -163,7 +163,7 @@ def test_net(name,
                 # b = im2show[:,:,0]
                 # im2show[:,:,0] = im2show[:,:,2]
                 # im2show[:,:,2] = b
-                logger.add_image("Step_"+str(step), np.transpose(im2show,[2,0,1]), step)
+                logger.add_image("Step_"+str(step), np.moveaxis(im2show,2,0), step)
 
     with open(det_file, 'wb') as f:
         cPickle.dump(all_boxes, f, cPickle.HIGHEST_PROTOCOL)
@@ -190,4 +190,4 @@ if __name__ == '__main__':
 
     # evaluation
     aps = test_net(
-        save_name, net, imdb, max_per_image, thresh=thresh, visualize=False)
+        save_name, net, imdb, max_per_image, thresh=thresh, visualize=True)
