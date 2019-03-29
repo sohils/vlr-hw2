@@ -43,7 +43,7 @@ class FC(nn.Module):
 
 class FC_noRelu(nn.Module):
     def __init__(self, in_features, out_features, relu=True):
-        super(FC, self).__init__()
+        super(FC_noRelu, self).__init__()
         self.fc = nn.Linear(in_features, out_features)
         # self.relu = nn.ReLU(inplace=True) if relu else None
 
