@@ -23,6 +23,8 @@ import gc
 import pdb
 from visdom import Visdom
 
+import test as testing
+
 try:
     from termcolor import cprint
 except ImportError:
@@ -177,8 +179,7 @@ for step in range(start_step, end_step + 1):
         max_per_image = 300
         thresh = 0.0001
         # evaluation
-        aps = test_net(
-            "test_no_one_cares", net, imdb, max_per_image, thresh=thresh, visualize=False)
+        aps = testing.test_net("test_no_one_cares", net, imdb, max_per_image, thresh=thresh, visualize=False)
         net.train()
 
     #TODO: Perform all visualizations here
@@ -196,6 +197,7 @@ for step in range(start_step, end_step + 1):
                     writer.add_histogram(tag, value.data.cpu().numpy(), n_iter)
                     writer.add_histogram(tag+'/grad', value.grad.data.cpu().numpy(), n_iter)
             if step % 5000 == 0:
+                writer.add_scalar('mAP', np.mean(ap), step)
                 for ap_index, ap in enumerate(aps):
                     writer.add_scalar('ap/'+imdb.classes, ap, step)
         if use_visdom:

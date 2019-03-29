@@ -195,8 +195,7 @@ def main():
     std = torch.tensor([0.229, 0.224, 0.225], dtype=torch.float32)
 
     # Adding manual seed to force repeatability
-    if torch.cuda.is_available():
-        torch.cuda.manual_seed_all(5)
+    torch.manual_seed(5)
 
     normalize = transforms.Normalize(mean=mean.tolist(), std=std.tolist())
     unnormalize = transforms.Normalize(mean = (-mean / std).tolist(), std=(1.0 / std).tolist())
