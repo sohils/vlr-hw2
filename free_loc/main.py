@@ -278,7 +278,7 @@ def main():
                 ind = index.cpu().numpy()[0]
                 heatmapimage_ = output[0,ind]
                 heatmapimage_ = display_heatmap(heatmapimage_, input.size()[2:])
-                vis.heatmap( heatmapimage_,opts=dict(title='random_valid_'+str(j)+'_heatmap_'+str(class_names[ind])))
+                vis.heatmap( heatmapimage_.flip(0),opts=dict(title='random_valid_'+str(j)+'_heatmap_'+str(class_names[ind])))
         break
 
 
