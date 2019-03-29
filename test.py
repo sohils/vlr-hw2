@@ -97,8 +97,7 @@ def test_net(name,
              thresh=0.05,
              visualize=False,
              logger=None,
-             step=None,
-             tbx_writer=None):
+             step=None):
     """Test a Fast R-CNN network on an image database."""
     num_images = len(imdb.image_index)
     # all detections are collected into:
@@ -160,8 +159,8 @@ def test_net(name,
             # TODO: Visualize here using tensorboard
             # TODO: use the logger that is an argument to this function
             print('Visualizing')
-            if(not tbx_writer == None):
-                tbx_writer.add_image("boudingbox_images",im2show,step)
+            if(not logger == None):
+                logger.add_image("boudingbox_images",im2show,step)
 
     with open(det_file, 'wb') as f:
         cPickle.dump(all_boxes, f, cPickle.HIGHEST_PROTOCOL)
