@@ -41,6 +41,16 @@ class FC(nn.Module):
             x = self.relu(x)
         return x
 
+class FC_noRelu(nn.Module):
+    def __init__(self, in_features, out_features, relu=True):
+        super(FC, self).__init__()
+        self.fc = nn.Linear(in_features, out_features)
+        # self.relu = nn.ReLU(inplace=True) if relu else None
+
+    def forward(self, x):
+        x = self.fc(x)
+        return x
+
 
 def save_net(fname, net):
     import h5py

@@ -73,8 +73,8 @@ class WSDDN(nn.Module):
         self.spp = RoIPool(pooled_height = 6, pooled_width = 6, spatial_scale=1/16.0)
         self.fc6 = FC(9216,4096)
         self.fc7 = FC(4096,4096)
-        self.fc8c = FC(4096,20)
-        self.fc8d = FC(4096,20)
+        self.fc8c = FC_noRelu(4096,20)
+        self.fc8d = FC_noRelu(4096,20)
 
         self.loss = nn.BCELoss()
 
@@ -111,7 +111,7 @@ class WSDDN(nn.Module):
         x = self.fc6(x)
         x = self.fc7(x)
         x_c = self.fc8c(x)
-        x_c = F.softmax(x_c, dim=0)
+        x_c = F.softmax(x_c, dim=1)
         x_d = self.fc8d(x)
         x_d = F.softmax(x_d, dim=0)
         x_R = x_c*x_d
@@ -135,7 +135,7 @@ class WSDDN(nn.Module):
         #output of forward()
         #Checkout forward() to see how it is called 
         cls_prob = cls_prob.sum(0)
-        loss = nn.BCELoss(reduction='sum')
+        loss = nn.BCELoss()
         bceloss = loss(cls_prob.squeeze(),label_vec.squeeze())
         return bceloss
 
