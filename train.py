@@ -201,7 +201,7 @@ for step in range(start_step, end_step + 1):
             if (not step==0) and (step % 5000 == 0):
                 writer.add_scalar('mAP', np.mean(aps), step)
                 for ap_index, ap in enumerate(aps):
-                    writer.add_scalar('ap/'+imdb.classes, ap, step)
+                    writer.add_scalar('ap/'+str(imdb.classes[ap_index]), ap, step)
         if use_visdom:
             print('Logging to visdom')
             vis_plotter.plot('train/loss', 'val', 'Training Loss', step_cnt, train_loss / step_cnt)
