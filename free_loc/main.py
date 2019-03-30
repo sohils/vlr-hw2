@@ -252,7 +252,7 @@ def main():
                     heatmapimage_ = display_heatmap(heatmapimage_, input.size()[2:])
                     img = input[j].cpu().numpy()
                     img = np.transpose(img, (1,2,0))
-                    heatmapimage_hots = (heatmapimage_.cpu().numpy() > 0.95)*1
+                    heatmapimage_hots = (heatmapimage_.cpu().detach().numpy() > 0.95)*1
                     heatmapimage_hots_indices_r, heatmapimage_hots_indices_c = np.where(heatmapimage_hots==1)
                     dets = []
                     for samp in range(100):
