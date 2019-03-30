@@ -242,9 +242,10 @@ def main():
             target = target[0:20]
             # Rest is similar
             for j in range(20):
+                print("Evaluating Image "+str(j))
                 t = target[j].type(torch.FloatTensor).cuda(async=True)
                 output = model(input[j].unsqueeze(0))
-                vis.image(convert_0_1(input[j]) ,opts=dict(title='random_valid_'+str(j)))
+                # vis.image(convert_0_1(input[j]) ,opts=dict(title='random_valid_'+str(j)))
                 for index in t.nonzero():
                     ind = index.cpu().numpy()[0]
                     heatmapimage_ = output[0,ind]
