@@ -21,6 +21,7 @@ from fast_rcnn.config import cfg, cfg_from_file, get_output_dir
 
 import visdom
 import pdb
+from tensorboardX import SummaryWriter
 # hyper-parameters
 # ------------
 imdb_name = 'voc_2007_test'
@@ -188,6 +189,8 @@ if __name__ == '__main__':
     net.cuda()
     net.eval()
 
+    writer = SummaryWriter()
+    thresh_temp = 0.7
     # evaluation
     aps = test_net(
-        save_name, net, imdb, max_per_image, thresh=thresh, visualize=True)
+        save_name, net, imdb, max_per_image, thresh=thresh_temp, visualize=True, logger=writer)
