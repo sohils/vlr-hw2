@@ -190,7 +190,7 @@ if __name__ == '__main__':
     net.eval()
 
     writer = SummaryWriter()
-    thresh_temp = 0.7
+    thresh_temp = 0.3
     # evaluation
     aps = test_net(
         save_name, net, imdb, max_per_image, thresh=thresh_temp, visualize=True, logger=writer)
