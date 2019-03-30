@@ -260,6 +260,7 @@ def main():
 
                     cnt = contours[0]
                     x,y,w,h = cv2.boundingRect(cnt)
+                    pdb.set_trace()
                     cv2.rectangle(img,(x,y),(x+w,y+h),(0,255,0),2)
                     # heatmapimage_hots = (heatmapimage_.cpu().detach().numpy() > 0.95)*1
                     # heatmapimage_hots_indices_r, heatmapimage_hots_indices_c = np.where(heatmapimage_hots==1)
