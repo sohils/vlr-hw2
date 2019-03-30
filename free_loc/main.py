@@ -252,20 +252,28 @@ def main():
                     heatmapimage_ = display_heatmap(heatmapimage_, input.size()[2:])
                     img = input[j].cpu().numpy()
                     img = np.transpose(img, (1,2,0))
-                    heatmapimage_hots = (heatmapimage_.cpu().detach().numpy() > 0.95)*1
-                    heatmapimage_hots_indices_r, heatmapimage_hots_indices_c = np.where(heatmapimage_hots==1)
-                    dets = []
-                    for samp in range(100):
-                        r_1 = random.randint(0,heatmapimage_hots_indices_r.shape[0])
-                        r_2 = random.randint(0,heatmapimage_hots_indices_r.shape[0])
-                        c_1 = random.randint(0,heatmapimage_hots_indices_c.shape[0])
-                        c_2 = random.randint(0,heatmapimage_hots_indices_c.shape[0])
-                        score = len(np.where(heatmapimage_hots[r_1:r_2,c_1:c_2]==1)[0])
-                        dets.append(np.array([c_1,c_2,r_1,r_2,score]))
-                    dets = np.asarray(dets)
-                    keep = nms(dets,0.5)
-                    img_rect = nms_dets[keep]
-                    cv2.rectangle(img,(img_rect[0],img_rect[1]),(img_rect[2],img_rect[3]),(0,255,0))
+
+                    heatmapimage_ = int(heatmapimage_*255)
+                    ret,thresh = cv2.threshold(img,127,255,0)
+                    contours,hierarchy = cv2.findContours(thresh, 1, 2)
+
+                    cnt = contours[0]
+                    x,y,w,h = cv2.boundingRect(cnt)
+                    cv2.rectangle(img,(x,y),(x+w,y+h),(0,255,0),2)
+                    # heatmapimage_hots = (heatmapimage_.cpu().detach().numpy() > 0.95)*1
+                    # heatmapimage_hots_indices_r, heatmapimage_hots_indices_c = np.where(heatmapimage_hots==1)
+                    # dets = []
+                    # for samp in range(100):
+                    #     r_1 = random.randint(0,heatmapimage_hots_indices_r.shape[0])
+                    #     r_2 = random.randint(0,heatmapimage_hots_indices_r.shape[0])
+                    #     c_1 = random.randint(0,heatmapimage_hots_indices_c.shape[0])
+                    #     c_2 = random.randint(0,heatmapimage_hots_indices_c.shape[0])
+                    #     score = len(np.where(heatmapimage_hots[r_1:r_2,c_1:c_2]==1)[0])
+                    #     dets.append(np.array([c_1,c_2,r_1,r_2,score]))
+                    # dets = np.asarray(dets)
+                    # keep = nms(dets,0.5)
+                    # img_rect = nms_dets[keep]
+                    # cv2.rectangle(img,(img_rect[0],img_rect[1]),(img_rect[2],img_rect[3]),(0,255,0))
                     cv2.imwrite('results/valid_j_ind.png', img)
                 # vis.heatmap( heatmapimage_.flip(0),opts=dict(title='random_valid_'+str(j)+'_heatmap_'+str(class_names[ind])))
         return
