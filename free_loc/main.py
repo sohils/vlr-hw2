@@ -255,7 +255,7 @@ def main():
                     img = np.transpose(img, (1,2,0))
 
                     heatmapimage_ = (heatmapimage_.cpu().detach().numpy()*255).astype(np.uint8)
-                    ret,thresh = cv2.threshold(img,200,255,0)
+                    ret,thresh = cv2.threshold(heatmapimage_,200,255,0)
                     contours,hierarchy = cv2.findContours(thresh, 1, 2)
 
                     cnt = contours[0]
