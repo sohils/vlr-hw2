@@ -256,7 +256,7 @@ def main():
 
                     heatmapimage_ = (heatmapimage_.cpu().detach().numpy()*255).astype(np.uint8)
                     ret,thresh = cv2.threshold(heatmapimage_,200,255,0)
-                    contours,hierarchy = cv2.findContours(thresh, 1, 2)
+                    (contours,hierarchy) = cv2.findContours(thresh, 1, 2)
 
                     cnt = contours[0]
                     x,y,w,h = cv2.boundingRect(cnt)
