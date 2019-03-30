@@ -55,6 +55,8 @@ def log_print(text, color=None, on_color=None, attrs=None):
         print(text)
 
 
+continue_at = 20000
+
 # hyper-parameters
 # ------------
 imdb_name = 'voc_2007_trainval'
@@ -120,8 +122,13 @@ for name, param in pret_net.items():
         print('Did not find {}'.format(name))
         continue
 
+if(continue_at):
+    trained_model = trained_model_fmt.format(cfg.TRAIN.SNAPSHOT_PREFIX, continue_at)
+    network.load_net(trained_model, net)
+
 # Move model to GPU and set train mode
-net.load_state_dict(own_state)
+if(not continue_at):
+    net.load_state_dict(own_state)
 net.cuda()
 net.train()
 
@@ -139,6 +146,8 @@ writer = SummaryWriter()
 train_loss = 0
 tp, tf, fg, bg = 0., 0., 0, 0
 step_cnt = 0
+if(continue_at):
+    start_step=continue_at+1
 re_cnt = False
 t = Timer()
 t.tic()
