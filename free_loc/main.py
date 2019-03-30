@@ -246,12 +246,12 @@ def main():
                 print("Evaluating Image "+str(j))
                 t = target[j].type(torch.FloatTensor).cuda(async=True)
                 output = model(input[j].unsqueeze(0))
-                # vis.image(convert_0_1(input[j]) ,opts=dict(title='random_valid_'+str(j)))
+                # vis.image(convert_0_1(input[.shj]) ,opts=dict(title='random_valid_'+str(j)))
                 for index in t.nonzero():
                     ind = index.cpu().numpy()[0]
                     heatmapimage_ = output[0,ind]
                     heatmapimage_ = display_heatmap(heatmapimage_, input.size()[2:])
-                    img = input[j].cpu().numpy()
+                    img = unnormalize(input[j]).cpu().numpy()
                     img = np.transpose(img, (1,2,0))
 
                     heatmapimage_ = (heatmapimage_.cpu().detach().numpy()*255).astype(np.uint8)
@@ -260,8 +260,9 @@ def main():
 
                     cnt = contours[0]
                     x,y,w,h = cv2.boundingRect(cnt)
-                    pdb.set_trace()
-                    cv2.rectangle(img,(x,y),(x+w,y+h),(0,255,0),2)
+                    # pdb.set_trace()
+                    img_wrect = (img.copy()*255).astype(np.uint8)
+                    cv2.rectangle(img_wrect,(x,y),(x+w,y+h),(0,255,0),2)
                     # heatmapimage_hots = (heatmapimage_.cpu().detach().numpy() > 0.95)*1
                     # heatmapimage_hots_indices_r, heatmapimage_hots_indices_c = np.where(heatmapimage_hots==1)
                     # dets = []
