@@ -30,6 +30,7 @@ from custom import *
 import matplotlib.pyplot as plt
 
 from fast_rcnn.nms_wrapper import nms
+import cv2
 import random
 
 model_names = sorted(name for name in models.__dict__
