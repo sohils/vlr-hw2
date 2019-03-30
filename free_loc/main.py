@@ -255,7 +255,7 @@ def main():
                     img = np.transpose(img, (1,2,0))
 
                     heatmapimage_ = (heatmapimage_.cpu().detach().numpy()*255).astype(np.uint8)
-                    ret,thresh = cv2.threshold(heatmapimage_,200,255,0)
+                    ret,thresh = cv2.threshold(heatmapimage_,175,255,0)
                     im_contour, contours, hierarchy = cv2.findContours(thresh, 1, 2)
 
                     cnt = contours[0]
@@ -277,6 +277,7 @@ def main():
                     # keep = nms(dets,0.5)
                     # img_rect = nms_dets[keep]
                     # cv2.rectangle(img,(img_rect[0],img_rect[1]),(img_rect[2],img_rect[3]),(0,255,0))
+                    img_wrect=cv2.cvtColor(img_wrect, cv2.COLOR_BGR2RGB)
                     cv2.imwrite('results/valid_'+str(j)+'_'+str(ind)+'.png', img_wrect)
                 # vis.heatmap( heatmapimage_.flip(0),opts=dict(title='random_valid_'+str(j)+'_heatmap_'+str(class_names[ind])))
             return
