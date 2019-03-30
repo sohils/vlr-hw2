@@ -181,7 +181,7 @@ if __name__ == '__main__':
 
     # load net
     net = WSDDN(classes=imdb.classes, debug=False)
-    trained_model = trained_model_fmt.format(cfg.TRAIN.SNAPSHOT_PREFIX, 30000)
+    trained_model = trained_model_fmt.format(cfg.TRAIN.SNAPSHOT_PREFIX, 5000)
     print('Loading {}'.format(trained_model))
     network.load_net(trained_model, net)
     print('load model successfully!')
