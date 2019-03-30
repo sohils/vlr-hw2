@@ -277,7 +277,7 @@ def main():
                     # keep = nms(dets,0.5)
                     # img_rect = nms_dets[keep]
                     # cv2.rectangle(img,(img_rect[0],img_rect[1]),(img_rect[2],img_rect[3]),(0,255,0))
-                    cv2.imwrite('results/valid_'+str(j)+'_'str(ind)+'.png', img_wrect)
+                    cv2.imwrite('results/valid_'+str(j)+'_'+str(ind)+'.png', img_wrect)
                 # vis.heatmap( heatmapimage_.flip(0),opts=dict(title='random_valid_'+str(j)+'_heatmap_'+str(class_names[ind])))
             return
 
