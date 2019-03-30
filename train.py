@@ -101,30 +101,31 @@ data_layer = RoIDataLayer(roidb, imdb.num_classes)
 # Create network and initialize
 net = WSDDN(classes=imdb.classes, debug=_DEBUG)
 print(net)
-network.weights_normal_init(net, dev=0.001)
-if os.path.exists('pretrained_alexnet.pkl'):
-    pret_net = pkl.load(open('pretrained_alexnet.pkl', 'rb'))
-else:
-    pret_net = model_zoo.load_url(
-        'https://download.pytorch.org/models/alexnet-owt-4df8aa71.pth')
-    pkl.dump(pret_net, open('pretrained_alexnet.pkl', 'wb'),
-             pkl.HIGHEST_PROTOCOL)
-own_state = net.state_dict()
-for name, param in pret_net.items():
-    if name not in own_state:
-        continue
-    if isinstance(param, Parameter):
-        param = param.data
-    try:
-        own_state[name].copy_(param)
-        print('Copied {}'.format(name))
-    except:
-        print('Did not find {}'.format(name))
-        continue
-
 if(continue_at):
+    trained_model_fmt = 'models/saved_model/{}_{}.h5'
     trained_model = trained_model_fmt.format(cfg.TRAIN.SNAPSHOT_PREFIX, continue_at)
     network.load_net(trained_model, net)
+else:
+    network.weights_normal_init(net, dev=0.001)
+    if os.path.exists('pretrained_alexnet.pkl'):
+        pret_net = pkl.load(open('pretrained_alexnet.pkl', 'rb'))
+    else:
+        pret_net = model_zoo.load_url(
+            'https://download.pytorch.org/models/alexnet-owt-4df8aa71.pth')
+        pkl.dump(pret_net, open('pretrained_alexnet.pkl', 'wb'),
+                pkl.HIGHEST_PROTOCOL)
+    own_state = net.state_dict()
+    for name, param in pret_net.items():
+        if name not in own_state:
+            continue
+        if isinstance(param, Parameter):
+            param = param.data
+        try:
+            own_state[name].copy_(param)
+            print('Copied {}'.format(name))
+        except:
+            print('Did not find {}'.format(name))
+            continue
 
 # Move model to GPU and set train mode
 if(not continue_at):
