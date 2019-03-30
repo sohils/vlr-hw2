@@ -238,34 +238,34 @@ def main():
         for i, (input, target) in enumerate(val_loader):
         # pdb.set_trace()
         # Select only 20
-        input = input[0:20]
-        target = target[0:20]
-        # Rest is similar
-        for j in range(20):
-            t = target[j].type(torch.FloatTensor).cuda(async=True)
-            output = model(input[j].unsqueeze(0))
-            vis.image(convert_0_1(input[j]) ,opts=dict(title='random_valid_'+str(j)))
-            for index in t.nonzero():
-                ind = index.cpu().numpy()[0]
-                heatmapimage_ = output[0,ind]
-                heatmapimage_ = display_heatmap(heatmapimage_, input.size()[2:])
-                img = input[j].cpu().numpy()
-                img = np.transpose(img, (1,2,0))
-                heatmapimage_hots = (heatmapimage_.cpu().numpy() > 0.95)*1
-                heatmapimage_hots_indices_r, heatmapimage_hots_indices_c = np.where(heatmapimage_hots==1)
-                dets = []
-                for samp in range(100):
-                    r_1 = random.randint(0,heatmapimage_hots_indices_r.shape[0])
-                    r_2 = random.randint(0,heatmapimage_hots_indices_r.shape[0])
-                    c_1 = random.randint(0,heatmapimage_hots_indices_c.shape[0])
-                    c_2 = random.randint(0,heatmapimage_hots_indices_c.shape[0])
-                    score = len(np.where(heatmapimage_hots[r_1:r_2,c_1:c_2]==1)[0])
-                    dets.append(np.array([c_1,c_2,r_1,r_2,score]))
-                dets = np.asarray(dets)
-                keep = nms(dets,0.5)
-                img_rect = nms_dets[keep]
-                cv2.rectangle(img,(img_rect[0],img_rect[1]),(img_rect[2],img_rect[3]),(0,255,0))
-                cv2.imwrite('valid_j_ind.png', img)
+            input = input[0:20]
+            target = target[0:20]
+            # Rest is similar
+            for j in range(20):
+                t = target[j].type(torch.FloatTensor).cuda(async=True)
+                output = model(input[j].unsqueeze(0))
+                vis.image(convert_0_1(input[j]) ,opts=dict(title='random_valid_'+str(j)))
+                for index in t.nonzero():
+                    ind = index.cpu().numpy()[0]
+                    heatmapimage_ = output[0,ind]
+                    heatmapimage_ = display_heatmap(heatmapimage_, input.size()[2:])
+                    img = input[j].cpu().numpy()
+                    img = np.transpose(img, (1,2,0))
+                    heatmapimage_hots = (heatmapimage_.cpu().numpy() > 0.95)*1
+                    heatmapimage_hots_indices_r, heatmapimage_hots_indices_c = np.where(heatmapimage_hots==1)
+                    dets = []
+                    for samp in range(100):
+                        r_1 = random.randint(0,heatmapimage_hots_indices_r.shape[0])
+                        r_2 = random.randint(0,heatmapimage_hots_indices_r.shape[0])
+                        c_1 = random.randint(0,heatmapimage_hots_indices_c.shape[0])
+                        c_2 = random.randint(0,heatmapimage_hots_indices_c.shape[0])
+                        score = len(np.where(heatmapimage_hots[r_1:r_2,c_1:c_2]==1)[0])
+                        dets.append(np.array([c_1,c_2,r_1,r_2,score]))
+                    dets = np.asarray(dets)
+                    keep = nms(dets,0.5)
+                    img_rect = nms_dets[keep]
+                    cv2.rectangle(img,(img_rect[0],img_rect[1]),(img_rect[2],img_rect[3]),(0,255,0))
+                    cv2.imwrite('results/valid_j_ind.png', img)
                 # vis.heatmap( heatmapimage_.flip(0),opts=dict(title='random_valid_'+str(j)+'_heatmap_'+str(class_names[ind])))
         return
 
