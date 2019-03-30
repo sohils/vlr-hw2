@@ -55,7 +55,7 @@ def log_print(text, color=None, on_color=None, attrs=None):
         print(text)
 
 
-continue_at = 20000
+continue_at = 0
 
 # hyper-parameters
 # ------------
