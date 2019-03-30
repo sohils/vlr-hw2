@@ -138,7 +138,7 @@ def test_net(name,
             keep = nms(cls_dets, cfg.TEST.NMS)
             cls_dets = cls_dets[keep, :]
             if visualize:
-                im2show = vis_detections(im2show, imdb.classes[newj], cls_dets)
+                im2show = vis_detections(im2show, imdb.classes[newj], cls_dets, thresh=0.001)
             all_boxes[j][i] = cls_dets
 
         # Limit to max_per_image detections *over all classes*
