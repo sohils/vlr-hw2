@@ -29,7 +29,7 @@ from custom import *
 
 import matplotlib.pyplot as plt
 
-from faster_rcnn.utils import nms
+from fast_rcnn.nms_wrapper import nms
 import random
 
 model_names = sorted(name for name in models.__dict__
